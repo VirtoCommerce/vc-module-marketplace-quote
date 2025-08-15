@@ -1,0 +1,85 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3CD020CC-73C8-4C81-A87C-1490448A555A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Web", "src\VirtoCommerce.MarketplaceQuoteModule.Web\VirtoCommerce.MarketplaceQuoteModule.Web.csproj", "{900D9DC2-0705-4581-A4E6-98D583F90177}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Data", "src\VirtoCommerce.MarketplaceQuoteModule.Data\VirtoCommerce.MarketplaceQuoteModule.Data.csproj", "{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Core", "src\VirtoCommerce.MarketplaceQuoteModule.Core\VirtoCommerce.MarketplaceQuoteModule.Core.csproj", "{809D9757-62D8-4467-BEED-A6C75A5802FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Data.MySql", "src\VirtoCommerce.MarketplaceQuoteModule.Data.MySql\VirtoCommerce.MarketplaceQuoteModule.Data.MySql.csproj", "{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql", "src\VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql\VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql.csproj", "{D332174D-E2BF-4D18-80C0-0D5518A688C0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer", "src\VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer\VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer.csproj", "{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{59663154-9D1E-4B13-9D73-A77484B3FA3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.MarketplaceQuoteModule.Tests", "tests\VirtoCommerce.MarketplaceQuoteModule.Tests\VirtoCommerce.MarketplaceQuoteModule.Tests.csproj", "{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D177F369-85DB-4421-90BB-8BDE246B73EF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		LICENSE = LICENSE
+		module.ignore = module.ignore
+		README.md = README.md
+		VirtoCommerce.MarketplaceQuoteModule.sln.DotSettings = VirtoCommerce.MarketplaceQuoteModule.sln.DotSettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{900D9DC2-0705-4581-A4E6-98D583F90177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{900D9DC2-0705-4581-A4E6-98D583F90177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{900D9DC2-0705-4581-A4E6-98D583F90177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{900D9DC2-0705-4581-A4E6-98D583F90177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{809D9757-62D8-4467-BEED-A6C75A5802FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{809D9757-62D8-4467-BEED-A6C75A5802FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{809D9757-62D8-4467-BEED-A6C75A5802FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{809D9757-62D8-4467-BEED-A6C75A5802FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D332174D-E2BF-4D18-80C0-0D5518A688C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D332174D-E2BF-4D18-80C0-0D5518A688C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D332174D-E2BF-4D18-80C0-0D5518A688C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D332174D-E2BF-4D18-80C0-0D5518A688C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{900D9DC2-0705-4581-A4E6-98D583F90177} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{2BEE3E9F-C67E-4C09-A2D2-670BB9E9C483} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{809D9757-62D8-4467-BEED-A6C75A5802FB} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{E49E7F2F-20C3-4DE6-A1FA-000E9FA4C1E7} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{D332174D-E2BF-4D18-80C0-0D5518A688C0} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{4C53E8BC-23AD-4A19-8895-A1FBFAB7F7F1} = {3CD020CC-73C8-4C81-A87C-1490448A555A}
+		{B5618A75-CEC5-4DF0-80D8-F1ED86DEBF27} = {59663154-9D1E-4B13-9D73-A77484B3FA3D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8108B7C5-00E5-4528-BA58-FD37B3217772}
+	EndGlobalSection
+EndGlobal

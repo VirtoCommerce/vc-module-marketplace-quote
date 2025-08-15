@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+  <id>VirtoCommerce.MarketplaceQuote</id>
+  <version>3.800.0</version>
+  <version-tag></version-tag>
+
+  <platformVersion>3.897.0</platformVersion>
+  <dependencies>
+    <dependency id="VirtoCommerce.Quote" version="3.908.0" />
+    <dependency id="VirtoCommerce.MarketplaceVendor" version="3.829.0" />
+  </dependencies>
+
+  <title>VirtoCommerce MarketplaceQuote</title>
+  <description>VirtoCommerce MarketplaceQuote extension module</description>
+
+  <authors>
+    <author>Vladimir Buravlev</author>
+  </authors>
+  <owners>
+    <owner>VirtoCommerce</owner>
+  </owners>
+
+  <projectUrl>https://github.com/VirtoCommerce/vc-module-marketplace-quote</projectUrl>
+  <iconUrl>Modules/$(VirtoCommerce.MarketplaceQuote)/Content/logo.png</iconUrl>
+  <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+  <assemblyFile>VirtoCommerce.MarketplaceQuoteModule.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.MarketplaceQuoteModule.Web.Module, VirtoCommerce.MarketplaceQuoteModule.Web</moduleType>
+
+  <releaseNotes>First version.</releaseNotes>
+  <copyright>Copyright © 2025 VirtoCommerce. All rights reserved</copyright>
+  <tags>Marketplace Quote module</tags>
+  <useFullTypeNameInSwagger>false</useFullTypeNameInSwagger>
+</module>
