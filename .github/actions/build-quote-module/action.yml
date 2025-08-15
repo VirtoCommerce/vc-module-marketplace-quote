@@ -1,0 +1,17 @@
+# v2.0.0
+name: Build Quote Module
+
+runs:
+  using: composite
+
+  steps:
+
+    - name: Install dependencies for Quote Module
+      shell: bash
+      working-directory: src/VirtoCommerce.MarketplaceQuoteModule.Web/vcmp-quote
+      run: yarn
+
+    - name: Build Quote Module
+      shell: bash
+      working-directory:  src/VirtoCommerce.MarketplaceQuoteModule.Web/vcmp-quote
+      run: yarn build:modules-bundle
