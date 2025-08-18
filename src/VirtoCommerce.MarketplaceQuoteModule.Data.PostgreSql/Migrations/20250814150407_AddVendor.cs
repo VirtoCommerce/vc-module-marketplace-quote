@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -23,6 +23,14 @@ namespace VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql.Migrations
                 type: "character varying(255)",
                 maxLength: 255,
                 nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Discriminator",
+                table: "QuoteRequest",
+                type: "character varying(128)",
+                maxLength: 128,
+                nullable: false,
+                defaultValue: "QuoteRequestEntity");
         }
 
         /// <inheritdoc />

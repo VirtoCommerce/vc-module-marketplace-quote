@@ -9,15 +9,21 @@ using VirtoCommerce.MarketplaceQuoteModule.Data.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.MySql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Repositories;
+using VirtoCommerce.MarketplaceQuoteModule.Data.Services;
 using VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.MySql.Extensions;
 using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
+using VirtoCommerce.QuoteModule.Core.Events;
 using VirtoCommerce.QuoteModule.Core.Models;
+using VirtoCommerce.QuoteModule.Core.Services;
+using VirtoCommerce.QuoteModule.Data.Handlers;
 using VirtoCommerce.QuoteModule.Data.Model;
+using VirtoCommerce.QuoteModule.Data.Repositories;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Web;
 
@@ -47,12 +53,10 @@ public class Module : IModule, IHasConfiguration
             }
         });
 
-        // Override models
-        //AbstractTypeFactory<OriginalModel>.OverrideType<OriginalModel, ExtendedModel>().MapToType<ExtendedEntity>();
-        //AbstractTypeFactory<OriginalEntity>.OverrideType<OriginalEntity, ExtendedEntity>();
+        serviceCollection.AddTransient<IQuoteRepository, VcmpQuoteRepository>();
 
-        // Register services
-        //serviceCollection.AddTransient<IMyService, MyService>();
+
+        serviceCollection.AddTransient<IQuoteRequestService, VcmpQuoteRequestService>();
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)
@@ -63,14 +67,17 @@ public class Module : IModule, IHasConfiguration
         var settingsRegistrar = serviceProvider.GetRequiredService<ISettingsRegistrar>();
         settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
 
-        //// Register permissions
-        //var permissionsRegistrar = serviceProvider.GetRequiredService<IPermissionsRegistrar>();
-        //permissionsRegistrar.RegisterPermissions(ModuleInfo.Id, "MarketplaceQuoteModule", ModuleConstants.Security.Permissions.AllPermissions);
-
-        AbstractTypeFactory<QuoteRequestEntity>.OverrideType<QuoteRequestEntity, VcmpQuoteRequestEntity>();
         AbstractTypeFactory<QuoteRequest>.OverrideType<QuoteRequest, VcmpQuoteRequest>();
+        AbstractTypeFactory<QuoteRequestEntity>.OverrideType<QuoteRequestEntity, VcmpQuoteRequestEntity>();
+
+        //AbstractTypeFactory<QuoteRequest>.RegisterType<VcmpQuoteRequest>().MapToType<VcmpQuoteRequestEntity>();
+        //AbstractTypeFactory<QuoteRequestEntity>.RegisterType<VcmpQuoteRequestEntity>();
+
+
 
         AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
+
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, CancelQuoteEventHandler>();
 
         // Apply migrations
         using var serviceScope = serviceProvider.CreateScope();

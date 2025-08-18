@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -24,6 +24,15 @@ namespace VirtoCommerce.MarketplaceQuoteModule.Data.MySql.Migrations
                 type: "varchar(255)",
                 maxLength: 255,
                 nullable: true)
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Discriminator",
+                table: "QuoteRequest",
+                type: "varchar(128)",
+                maxLength: 128,
+                nullable: false,
+                defaultValue: "QuoteRequestEntity")
                 .Annotation("MySql:CharSet", "utf8mb4");
         }
 
