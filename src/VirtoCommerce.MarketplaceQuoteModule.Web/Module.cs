@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.MarketplaceQuoteModule.Core;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
+using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.MySql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql;
@@ -55,8 +56,8 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<IQuoteRepository, VcmpQuoteRepository>();
 
-
         serviceCollection.AddTransient<IQuoteRequestService, VcmpQuoteRequestService>();
+        serviceCollection.AddTransient<IQuoteRequestSplitter, QuoteRequestSplitter>();
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)
@@ -69,11 +70,6 @@ public class Module : IModule, IHasConfiguration
 
         AbstractTypeFactory<QuoteRequest>.OverrideType<QuoteRequest, VcmpQuoteRequest>();
         AbstractTypeFactory<QuoteRequestEntity>.OverrideType<QuoteRequestEntity, VcmpQuoteRequestEntity>();
-
-        //AbstractTypeFactory<QuoteRequest>.RegisterType<VcmpQuoteRequest>().MapToType<VcmpQuoteRequestEntity>();
-        //AbstractTypeFactory<QuoteRequestEntity>.RegisterType<VcmpQuoteRequestEntity>();
-
-
 
         AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
 

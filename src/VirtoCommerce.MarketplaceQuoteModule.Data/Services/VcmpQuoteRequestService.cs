@@ -105,19 +105,6 @@ public class VcmpQuoteRequestService : QuoteRequestService
         {
             return base.BuildQuery(repository, criteria);
         }
-
-        //var query = base.BuildQuery(repository, criteria);
-
-        //if (criteria is VcmpQuoteRequestSearchCriteria vcmpQuoteRequestSearchCriteria
-        //    && !string.IsNullOrEmpty(vcmpQuoteRequestSearchCriteria.SellerId))
-        //{
-        //    query = query.OfType<VcmpQuoteRequestEntity>()
-        //                 .Where(x => x.SellerId == vcmpQuoteRequestSearchCriteria.SellerId)
-        //                 .Cast<QuoteRequestEntity>(); // Cast back to base type
-        //}
-
-        //query = query.Cast<QuoteRequestEntity>();
-        //return query;
     }
 
     protected override IList<SortInfo> BuildSortExpression(QuoteRequestSearchCriteria criteria)

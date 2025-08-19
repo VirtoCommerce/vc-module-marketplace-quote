@@ -15,13 +15,13 @@ public class VcmpQuoteRequestEntity : QuoteRequestEntity
 
     public override QuoteRequest ToModel(QuoteRequest quoteRequest)
     {
+        base.ToModel(quoteRequest);
+
         if (quoteRequest is VcmpQuoteRequest vcmpQuoteRequest)
         {
             vcmpQuoteRequest.SellerId = SellerId;
             vcmpQuoteRequest.SellerName = SellerName;
         }
-
-        base.ToModel(quoteRequest);
 
         return quoteRequest;
     }
@@ -33,25 +33,25 @@ public class VcmpQuoteRequestEntity : QuoteRequestEntity
             throw new ArgumentNullException(nameof(quoteRequest));
         }
 
+        base.FromModel(quoteRequest, pkMap);
+
         if (quoteRequest is VcmpQuoteRequest vcmpQuoteRequest)
         {
             SellerId = vcmpQuoteRequest.SellerId;
             SellerName = vcmpQuoteRequest.SellerName;
         }
 
-        base.FromModel(quoteRequest, pkMap);
-
         return this;
     }
 
     public override void Patch(QuoteRequestEntity target)
     {
+        base.Patch(target);
+
         if (target is VcmpQuoteRequestEntity vcmpQuoteRequestEntity)
         {
             vcmpQuoteRequestEntity.SellerId = SellerId;
             vcmpQuoteRequestEntity.SellerName = SellerName;
         }
-
-        base.Patch(target);
     }
 }
