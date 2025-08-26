@@ -6,6 +6,7 @@ using VirtoCommerce.MarketplaceQuoteModule.Core;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
+using VirtoCommerce.MarketplaceQuoteModule.Data.Handlers;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.MySql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql;
@@ -22,7 +23,6 @@ using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.QuoteModule.Core.Events;
 using VirtoCommerce.QuoteModule.Core.Models;
 using VirtoCommerce.QuoteModule.Core.Services;
-using VirtoCommerce.QuoteModule.Data.Handlers;
 using VirtoCommerce.QuoteModule.Data.Model;
 using VirtoCommerce.QuoteModule.Data.Repositories;
 
@@ -58,6 +58,8 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<IQuoteRequestService, VcmpQuoteRequestService>();
         serviceCollection.AddTransient<IQuoteRequestSplitter, QuoteRequestSplitter>();
+
+        serviceCollection.AddTransient<SubmitQuoteEventHandler>();
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)
@@ -73,7 +75,7 @@ public class Module : IModule, IHasConfiguration
 
         AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
 
-        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, CancelQuoteEventHandler>();
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteEventHandler>();
 
         // Apply migrations
         using var serviceScope = serviceProvider.CreateScope();

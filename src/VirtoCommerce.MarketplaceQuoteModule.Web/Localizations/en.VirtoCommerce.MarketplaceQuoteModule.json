@@ -1,23 +1,9 @@
 {
-  "MarketplaceQuoteModule": {
-    "blades": {
-      "hello-world": {
-        "title": "Hello world blade"
-      }
-    }
-  },
-  "permissions": {
-    "marketplace-quote-module:access": "Open MarketplaceQuoteModule menu",
-    "marketplace-quote-module:create": "Create MarketplaceQuoteModule related data",
-    "marketplace-quote-module:read": "View MarketplaceQuoteModule related data",
-    "marketplace-quote-module:update": "Update MarketplaceQuoteModule related data",
-    "marketplace-quote-module:delete": "Delete MarketplaceQuoteModule related data"
-  },
   "settings": {
-    "MarketplaceQuoteModule": {
-      "Enabled": {
-        "title": "MarketplaceQuoteModule Enabled",
-        "description": "MarketplaceQuoteModule Enabled setting"
+    "Quotes": {
+      "SplitEnabled": {
+        "title": "Enable QuoteRequest split",
+        "description": "Enable QuoteRequest split by Vendors"
       }
     }
   }
