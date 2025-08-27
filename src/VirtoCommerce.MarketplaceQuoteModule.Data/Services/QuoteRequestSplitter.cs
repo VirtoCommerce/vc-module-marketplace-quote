@@ -31,14 +31,14 @@ public class QuoteRequestSplitter : IQuoteRequestSplitter
         foreach (var quoteRequestItem in quoteRequestItems)
         {
             var seller = byProductIdSellerMap[quoteRequestItem.ProductId];
-            var vcmpQuoteRequest = sellerQuoteRequestsMap[seller.Id];
+            var vcmpQuoteRequest = sellerQuoteRequestsMap[seller?.Id ?? string.Empty];
             if (vcmpQuoteRequest == null)
             {
                 vcmpQuoteRequest = ExType<VcmpQuoteRequest>.New().FromQuoteRequest(quoteRequest, theFirstSeller);
-                vcmpQuoteRequest.SellerId = seller.Id;
-                vcmpQuoteRequest.SellerName = seller.Name;
+                vcmpQuoteRequest.SellerId = seller?.Id;
+                vcmpQuoteRequest.SellerName = seller?.Name;
                 vcmpQuoteRequest.Items = new List<QuoteItem>();
-                sellerQuoteRequestsMap[seller.Id] = vcmpQuoteRequest;
+                sellerQuoteRequestsMap[seller?.Id ?? string.Empty] = vcmpQuoteRequest;
                 theFirstSeller = false;
             }
             quoteRequestItem.Id = null;
