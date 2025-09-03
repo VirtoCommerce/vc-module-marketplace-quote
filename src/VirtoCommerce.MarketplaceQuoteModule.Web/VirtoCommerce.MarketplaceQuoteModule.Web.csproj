@@ -11,10 +11,10 @@
     <SonarQubeTestProject>false</SonarQubeTestProject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="dist\**" />
-    <Content Remove="dist\**" />
-    <EmbeddedResource Remove="dist\**" />
-    <None Remove="dist\**" />
+    <Compile Remove="vcmp-quote\dist\**" />
+    <Content Remove="vcmp-quote\dist\**" />
+    <EmbeddedResource Remove="vcmp-quote\dist\**" />
+    <None Remove="vcmp-quote\dist\**" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.MarketplaceQuoteModule.Core\VirtoCommerce.MarketplaceQuoteModule.Core.csproj" />
@@ -23,4 +23,10 @@
     <ProjectReference Include="..\VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql\VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer\VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <QuoteApp Include="vcmp-quote\dist\**" />
+  </ItemGroup>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="@(QuoteApp)" DestinationFiles="$(PublishDir)\..\%(Identity)" />
+  </Target>
 </Project>
