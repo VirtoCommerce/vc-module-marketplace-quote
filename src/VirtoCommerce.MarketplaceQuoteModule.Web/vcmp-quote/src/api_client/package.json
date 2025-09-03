@@ -1,0 +1,28 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "exports": {
+    "./marketplacequote": {
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+    },
+    "./virtocommerce.marketplacequote": {
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+    },
+    ".": {
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+    }
+  },
+  "apiClientGenerator": {
+    "version": "1.0.0",
+    "generatedAt": "2025-09-03T13:28:38.257Z"
+  },
+  "module": "./dist\\virtocommerce.marketplacequote.js",
+  "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+}

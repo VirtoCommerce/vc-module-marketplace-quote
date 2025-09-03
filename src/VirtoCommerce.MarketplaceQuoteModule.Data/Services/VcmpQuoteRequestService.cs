@@ -121,4 +121,6 @@ public class VcmpQuoteRequestService : QuoteRequestService
 
         return sortInfos;
     }
+
+    //protected override 
 }

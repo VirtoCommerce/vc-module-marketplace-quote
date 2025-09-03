@@ -6,6 +6,7 @@ using VirtoCommerce.MarketplaceQuoteModule.Core;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
+using VirtoCommerce.MarketplaceQuoteModule.Data;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Handlers;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.MySql;
@@ -60,6 +61,9 @@ public class Module : IModule, IHasConfiguration
         serviceCollection.AddTransient<IQuoteRequestSplitter, QuoteRequestSplitter>();
 
         serviceCollection.AddTransient<SubmitQuoteEventHandler>();
+
+        serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
+
     }
 
     public void PostInitialize(IApplicationBuilder appBuilder)

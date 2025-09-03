@@ -1,0 +1,219 @@
+{
+  "QUOTES": {
+    "MENU": {
+      "TITLE": "Quote requests"
+    },
+    "WIDGET": {
+      "TITLE": "Quote requests",
+      "ALL": "All quote requests",
+      "EMPTY": "No quote requests"
+    },
+    "PAGES": {
+      "LIST": {
+        "TITLE": "Quote requests",
+        "TOOLBAR": {
+          "REFRESH": "Refresh",
+          "CONFIRM": "Confirm",
+          "CANCEL": "Cancel"
+        },
+        "TABLE": {
+          "TOTALS": "Total:",
+          "HEADER": {
+            "NUMBER": "Quote number",
+            "CUSTOMER": "Customer",
+            "TOTAL": "Total",
+            "QTY": "Qty",
+            "STATUS": "Status",
+            "CREATED": "Created",
+            "ITEMS_IMG": "Img"
+          },
+          "FILTER": {
+            "STATUS": {
+              "TITLE": "Status filter",
+              "None": "None",
+              "Unpaid": "Unpaid",
+              "Paid": "Paid",
+              "Shipped": "Shipped",
+              "Accepted": "Accepted",
+              "Cancelled": "Cancelled"
+            },
+            "DATE": {
+              "TITLE": "Quote request date",
+              "START_DATE": "Start date",
+              "END_DATE": "End date"
+            }
+          }
+        },
+        "NOT_FOUND": {
+          "EMPTY": "No quote requests found.",
+          "RESET": "Reset search"
+        },
+        "EMPTY": {
+          "NO_ITEMS": "There are no quote requests yet"
+        }
+      },
+      "DETAILS": {
+        "WIDGETS": {
+          "SHIPPING": "Shipping"
+        },
+        "TOOLBAR": {
+          "DL_PDF": "Download PDF",
+          "CONFIRM": "Confirm",
+          "CANCEL": "Cancel",
+          "SHIP": "Ship order",
+          "PACK": "Pack",
+          "EDIT": "Edit",
+          "CANCEL_EDIT": "Cancel editing",
+          "SAVE": "Save"
+        },
+        "FORM": {
+          "QUOTE_INFO": {
+            "TITLE": "Quote request info",
+            "QUOTE_REF": "Quote request reference #",
+            "CREATED_DATE": "Created date/time",
+            "STORE": "Store",
+            "STORE_TOOLTIP": "Shows store where quote request was placed",
+            "QUOTE_STATUS": "Quote request status",
+            "SUBTOTAL_PLACED": "Subtotal (placed)",
+            "ADJUSTMENT": "Adjustment",
+            "SUBTOTAL": "Subtotal",
+            "SHIPPING": "Shipping",
+            "DISCOUNT": "Discount",
+            "GRANDTOTAL": "Grand total",
+            "TAXES": "Taxes",
+            "GRANDTOTAL_TAXES": "Grand total (incl. taxes)"
+          },
+          "BUYER_RECIPIENT": {
+            "SOLD_TO": "Sold to",
+            "SHIP_TO": "Ship to",
+            "TITLE": "Buyer/recipient info"
+          },
+          "ITEMS_LIST": {
+            "TITLE": "Items list",
+            "SKU": "SKU",
+            "QUANTITY": "Quantity",
+            "UNIT_PRICE": "Unit price",
+            "TOTAL": "Total",
+            "COMMISSION": "Commission"
+          },
+          "TABLE": {
+            "PIC": "Img",
+            "NAME": "Item",
+            "QUANTITY": "Quantity",
+            "LIST_PRICE": "List price",
+            "SALE_PRICE": "Sale price",
+            "TOTAL": "Total",
+            "SKU": "SKU"
+          },
+          "OFFERS": {
+              "NOT_FOUND": "Offer does not exist. It might be already deleted."
+            },
+          "NOT_VALID": "Form is not valid.\nPlease, check highlighted fields."
+        }
+      },
+      "ALERTS": {
+        "CLOSE_CONFIRMATION": "You have unsaved changes. Close anyway?",
+        "FC_DELETE": "This action can not be undone. Are you sure you want to delete Fulfillment Center? "
+      }
+    }
+  },
+  "SHIPPING": {
+    "STATUSES": {
+      "CANCELLED": "Cancelled",
+      "NEW": "New",
+      "PICKPACK": "Pick & Pack",
+      "READYTOSEND": "Ready to send",
+      "SEND": "Send",
+      "CONFIRMED_DELIVERED": "Confirmed delivered",
+      "DELIVERED": "Delivered"
+    },
+    "PAGES": {
+      "LIST": {
+        "TITLE": "Shipping",
+        "TOOLBAR": {
+          "REFRESH": "Refresh",
+          "ADD": "Add",
+          "SAVE": "Save"
+        },
+        "TABLE": {
+          "TOTALS": "Total:",
+          "HEADER": {
+            "METHOD": "Shipping method",
+            "TRACK_NUM": "Tracking number",
+            "STATUS": "Status",
+            "TOTAL": "Total"
+          }
+        },
+        "EMPTY": {
+          "NO_ITEMS": "There is no shipping yet",
+          "ADD": "Add shipping"
+        }
+      },
+      "ITEMS_LIST": {
+        "TITLE": "Shipping",
+        "TOOLBAR": {
+          "REFRESH": "Refresh",
+          "ADD": "Add",
+          "CANCEL": "Cancel"
+        },
+        "TABLE": {
+          "HEADER": {
+            "IMAGE": "Img",
+            "SKU": "SKU",
+            "AVAIL_QTY": "Ordered quantity",
+            "ORDER_QTY": "Quantity in Shipment"
+          }
+        }
+      },
+      "DETAILS": {
+        "TITLE": "New shipment",
+        "TITLE_EDIT": "Shipment #",
+        "TOOLBAR": {
+          "SAVE": "Save",
+          "DELETE": "Delete"
+        },
+        "FORM": {
+          "ITEMS": {
+            "TITLE": "Items for shipment",
+            "FULFILLMENT_CENTER": "Fulfillment center",
+            "SHIPMENT_ID": "Shipment number",
+            "SHIPMENT_ID_PLACEHOLDER": "Enter shipment number",
+            "STATUS": "Status",
+            "TRACKING_NUMBER": "Tracking number",
+            "TRACKING_NUMBER_PLACEHOLDER": "Enter tracking number",
+            "TRACKING_URL": "Tracking URL",
+            "TRACKING_URL_PLACEHOLDER": "Enter tracking URL",
+            "SHIPPING_METHOD": "Shipping method",
+            "SHIPPING_METHOD_PLACEHOLDER": "Enter shipping method",
+            "DATE_TIME": "Date and time",
+            "ASSIGNED_TO": "Assigned to",
+            "SHIPMENT_AMOUNT": "Shipment amount",
+            "SHIPMENT_AMOUNT_PLACEHOLDER": "Enter shipment amount",
+            "SHIPMENT_AMOUNT_WITH_TAX": "Shipment amount with tax",
+            "SHIPMENT_AMOUNT_WITH_TAX_PLACEHOLDER": "Enter shipment amount with tax",
+            "DELIVERY_DATE": "Delivery date",
+            "VENDOR": "Vendor",
+            "LINE_ITEMS": {
+              "ADD": "Add item",
+              "TABLE": {
+                "IMAGE": "Img",
+                "SKU": "SKU",
+                "QTY": "Quantity",
+                "PRICE": "Price per item",
+                "TOTAL": "Total",
+                "ACTIONS": {
+                  "DELETE": "Delete"
+                },
+                "ORDERED_QUANTITY": "Ordered quantity"
+              }
+            }
+          }
+        }
+      },
+      "ALERTS": {
+        "DELETE": "Are you sure you want to delete this shipment?",
+        "CLOSE_CONFIRMATION": "You have unsaved changes. Close anyway?"
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ public class VcmpQuoteRequest : QuoteRequest, IHasSellerId
 {
     public string SellerId { get; set; }
     public string SellerName { get; set; }
+    public decimal Total => Totals?.GrandTotalInclTax ?? 0;
 
     public virtual VcmpQuoteRequest FromQuoteRequest(QuoteRequest quoteRequest, bool fullClone = false, bool withoutItems = true)
     {
