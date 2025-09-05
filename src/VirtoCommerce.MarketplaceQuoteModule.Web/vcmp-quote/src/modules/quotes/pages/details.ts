@@ -9,12 +9,6 @@ export const details: DynamicDetailsSchema = {
     composable: "useQuote",
     width: "70%",
     toolbar: [
-    //   {
-    //     id: "downloadPdf",
-    //     title: "QUOTES.PAGES.DETAILS.TOOLBAR.DL_PDF",
-    //     icon: "bi-filetype-pdf",
-    //     method: "downloadPdf",
-    //   },
       {
         id: "save",
         title: "QUOTES.PAGES.DETAILS.TOOLBAR.SAVE",
@@ -22,21 +16,27 @@ export const details: DynamicDetailsSchema = {
         method: "saveChanges",
       },
       {
-        id: "edit",
-        title: "QUOTES.PAGES.DETAILS.TOOLBAR.EDIT",
-        icon: "lucide-file-pen-line",
-        method: "edit",
-      },
-      {
-        id: "cancelEdit",
-        title: "QUOTES.PAGES.DETAILS.TOOLBAR.CANCEL_EDIT",
+        id: "reset",
+        title: "QUOTES.PAGES.DETAILS.TOOLBAR.RESET",
         icon: "material-undo",
-        method: "cancelEdit",
+        method: "resetChanges",
       },
       {
-        id: "stateMachineComputed",
-        method: "stateMachineComputed",
+        id: "submit",
+        title: "QUOTES.PAGES.DETAILS.TOOLBAR.SUBMIT_PROPOSAL",
+        icon: "material-check",
+        method: "submitProposal",
       },
+      {
+        id: "cancel",
+        title: "QUOTES.PAGES.DETAILS.TOOLBAR.CANCEL_DOCUMENT",
+        icon: "material-cancel",
+        method: "cancelDocument",
+      },
+      // {
+      //   id: "stateMachineComputed",
+      //   method: "stateMachineComputed",
+      // },
     ],
   },
   content: [
@@ -206,6 +206,21 @@ export const details: DynamicDetailsSchema = {
                     },
                   ],
                 },
+                {
+                  id: "quoteComment",
+                  component: "vc-fieldset",
+                  horizontalSeparator: true,
+                  fields: [
+                    {
+                      id: "comment",
+                      label: "QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.COMMENT",
+                      component: "vc-field",
+                      property: "comment",
+                      orientation: "horizontal",
+                      aspectRatio: [1, 2],
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -262,28 +277,27 @@ export const details: DynamicDetailsSchema = {
                   title: "QUOTES.PAGES.DETAILS.FORM.TABLE.SALE_PRICE",
                   type: "money",
                   currencyField: "currency",
-                  editable: true,
-                  rules: {
-                    min_value: 0,
-                  },
-                  onCellBlur: {
-                    method: "calculateTotals",
-                  },
+                },
+                {
+                  id: "proposedPrice",
+                  title: "QUOTES.PAGES.DETAILS.FORM.TABLE.PROPOSED_PRICE",
+                  type: "money",
+                  currencyField: "currency",
                 },
                 {
                   id: "quantity",
                   title: "QUOTES.PAGES.DETAILS.FORM.TABLE.QUANTITY",
                   type: "number",
                   editable: true,
-                  rules: {
-                    min_value: 0,
-                  },
-                  onCellBlur: {
-                    method: "calculateTotals",
-                  },
+                  // rules: {
+                  //   min_value: 0,
+                  // },
+                  // onCellBlur: {
+                  //   method: "calculateTotals",
+                  // },
                 },
                 {
-                  id: "extendedPrice",
+                  id: "total",
                   title: "QUOTES.PAGES.DETAILS.FORM.TABLE.TOTAL",
                   type: "money",
                   currencyField: "currency",

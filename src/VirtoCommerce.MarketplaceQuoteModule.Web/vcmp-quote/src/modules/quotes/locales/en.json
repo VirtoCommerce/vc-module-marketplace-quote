@@ -57,14 +57,12 @@
           "SHIPPING": "Shipping"
         },
         "TOOLBAR": {
-          "DL_PDF": "Download PDF",
           "CONFIRM": "Confirm",
           "CANCEL": "Cancel",
-          "SHIP": "Ship order",
-          "PACK": "Pack",
-          "EDIT": "Edit",
-          "CANCEL_EDIT": "Cancel editing",
-          "SAVE": "Save"
+          "RESET": "Reset",
+          "SUBMIT_PROPOSAL": "Submit quote",
+          "SAVE": "Save",
+          "CANCEL_DOCUMENT": "Cancel request"
         },
         "FORM": {
           "QUOTE_INFO": {
@@ -74,6 +72,7 @@
             "STORE": "Store",
             "STORE_TOOLTIP": "Shows store where quote request was placed",
             "QUOTE_STATUS": "Quote request status",
+            "COMMENT": "Comment",
             "SUBTOTAL_PLACED": "Subtotal (placed)",
             "ADJUSTMENT": "Adjustment",
             "SUBTOTAL": "Subtotal",
@@ -102,6 +101,7 @@
             "QUANTITY": "Quantity",
             "LIST_PRICE": "List price",
             "SALE_PRICE": "Sale price",
+            "PROPOSED_PRICE": "Proposed price",
             "TOTAL": "Total",
             "SKU": "SKU"
           },
@@ -109,6 +109,24 @@
               "NOT_FOUND": "Offer does not exist. It might be already deleted."
             },
           "NOT_VALID": "Form is not valid.\nPlease, check highlighted fields."
+        }
+      },
+      "PROPOSAL_PRICES": {
+        "TOOLBAR": {
+          "APPLY": "Apply",
+          "CANCEL":"Cancel"
+        },
+        "FIELDS": {
+          "NAME": "Quote Item",
+          "PRICING": "Proposal prices",
+          "ADD_PRICE": "Add price",
+          "DELETE": "Delete",
+          "MIN_QTY": "Quantity",
+          "PRICE": "Price per item",
+          "COMMENT":{
+            "TITLE": "Comment",
+            "PLACEHOLDER": "Comment"
+          }
         }
       },
       "ALERTS": {

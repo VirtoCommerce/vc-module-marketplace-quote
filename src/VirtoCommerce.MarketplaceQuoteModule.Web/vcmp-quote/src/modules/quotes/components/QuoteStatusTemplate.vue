@@ -30,33 +30,18 @@ const statusStyle = (status: string) => {
   };
 
   switch (status) {
-    case "Published":
+    case "Processing":
       result.outline = false;
-      result.variant = "success";
-      break;
-    case "New":
-      result.outline = true;
-      result.variant = "warning";
-      break;
-    case "Pending":
-      result.outline = false;
-      result.variant = "warning";
-      break;
-    case "Confirmed":
-      result.outline = true;
-      result.variant = "success";
-      break;
-    case "Packaged":
-      result.outline = true;
       result.variant = "primary";
       break;
-    case "Cancelled":
+    case "Proposal sent":
+      result.outline = false;
+      result.variant = "success";
+      break;
+    case "Canceled":
       result.outline = true;
       result.variant = "danger";
       break;
-    case "Shipped":
-      result.outline = false;
-      result.variant = "success";
   }
   return result;
 };

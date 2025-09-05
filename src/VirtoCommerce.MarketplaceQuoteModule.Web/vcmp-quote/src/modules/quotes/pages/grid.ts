@@ -22,7 +22,7 @@ export const grid: DynamicGridSchema = {
     ],
     menuItem: {
       title: "QUOTES.MENU.TITLE",
-      icon: "material-shopping_cart",
+      icon: "material-request_quote",
       priority: 1,
     },
   },

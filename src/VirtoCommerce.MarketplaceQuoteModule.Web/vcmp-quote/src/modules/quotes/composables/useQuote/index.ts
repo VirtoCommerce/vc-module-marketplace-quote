@@ -14,22 +14,10 @@ import {
   usePopup,
 } from "@vc-shell/framework";
 import {
-  VcmpSellerOrdersClient,
-  UpdateSellerOrderCommand,
-  SellerOrder,
-  OrderShipment,
-  OrderLineItem,
-  OrderShipmentItem,
-  SearchOffersQuery,
-  VcmpSellerCatalogClient,
-} from "@vcmp-vendor-portal/api/marketplacevendor";
-import {
-  SearchQuoteRequestsQuery,
   VcmpQuoteClient,
   QuoteAddressAddressType,
-  QuoteRequestSearchResult,
-  ISearchQuoteRequestsQuery,
   QuoteRequest,
+  QuoteItem
 } from "../../../../api_client/virtocommerce.marketplacequote";
 //import { StateMachineInstance } from "@vcmp-vendor-portal/api/statemachine";
 import { ComputedRef, Ref, computed, ref, watch, unref } from "vue";
@@ -51,13 +39,14 @@ interface IShippingInfo {
 export interface QuoteScope extends DetailsBaseBladeScope {
   disabled: Ref<boolean>;
   toolbarOverrides: {
-    //downloadPdf: IBladeToolbar;
     saveChanges: IBladeToolbar;
-    edit: IBladeToolbar;
-    cancelEdit: IBladeToolbar;
-    stateMachineComputed: ComputedRef<IBladeToolbar[]>;
+    resetChanges: IBladeToolbar;
+    submitProposal: IBladeToolbar;
+    cancelDocument: IBladeToolbar;
+    //stateMachineComputed: ComputedRef<IBladeToolbar[]>;
   };
   shippingInfo: ComputedRef<IShippingInfo[]>;
+  recalculateTotals: (data: { quoteItem: QuoteItem }) => void;
   addressVisibility: (
     schema: {
       property: keyof IShippingInfo;
@@ -96,25 +85,17 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
         const sellerId = await GetSellerId();
          var result = await (await getApiClient()).getById(item.id);
          result.items?.forEach(item =>
-            item.extendedPrice = (item.salePrice ?? item.listPrice)! * item.quantity!
+          {
+              item.total = (item.selectedTierPrice?.price ?? item.salePrice ?? item.listPrice)! * item.quantity!;
+              item.proposedPrice = item.selectedTierPrice?.price ?? item.salePrice;
+          }
          );
          return result;
       }
     },
     saveChanges: async (details) => {
-    //   if (details?.id) {
-    //     disabled.value = true;
-    //     const sellerId = await GetSellerId();
-    //     return (await getApiClient()).updateOrder(
-    //       new UpdateSellerOrderCommand({
-    //         sellerId: sellerId,
-    //         order: new SellerOrder({
-    //           id: details.id,
-    //           customerOrder: details,
-    //         }),
-    //       }),
-    //     );
-    //   }
+      const sellerId = await GetSellerId();
+      return (await getApiClient()).update(details);
     },
   });
 
@@ -202,7 +183,12 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
     }).format(typeof value === "undefined" ? 0 : value);
   };
 
-  async function onItemClick(item: OrderLineItem) {
+  async function onItemClick(item: QuoteItem) {
+    await openBlade({
+      blade: resolveBladeByName("QuoteItemProposalPrices"),
+      options: {item: item},
+    });
+
     // if (disabled.value) {
     //   try {
     //     catalogLoading.value = true;
@@ -236,17 +222,38 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
     onItemClick,
     selectedItemId,
     toolbarOverrides: {
-    //   downloadPdf: {
-    //     async clickHandler() {
-    //       if (args.props.param) {
-    //         await loadPdf();
-    //       }
-    //     },
-    //     //disabled: computed(() => stateMachineLoading.value || !args.props.param),
-    //   },
       saveChanges: {
         async clickHandler() {
           if (item.value) {
+            await saveChanges(item.value);
+
+            args.emit("parent:call", {
+              method: "reload",
+            });
+
+            args.emit("parent:call", {
+              method: "openDetailsBlade",
+              args: {
+                param: item.value.id ?? undefined,
+              },
+            });
+          }
+        },
+        isVisible: computed(() => item.value?.status == "Processing"),
+        disabled: computed(() => !(validationState.value.valid && validationState.value.modified)),
+      },
+      resetChanges: {
+        async clickHandler() {
+          validationState.value.resetModified(validationState.value.cachedValue, true);
+          disabled.value = true;
+        },
+        isVisible: computed(() => item.value?.status == "Processing"),
+        disabled: computed(() => !(validationState.value.modified)),
+      },
+      submitProposal: {
+        async clickHandler() {
+          if (item.value) {
+            item.value.status = "Proposal sent";
             const res = await saveChanges(item.value);
 
             args.emit("parent:call", {
@@ -256,35 +263,55 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
             args.emit("parent:call", {
               method: "openDetailsBlade",
               args: {
-                param: (res && res.id) ?? undefined,
+                param: item.value.id ?? undefined,
               },
             });
           }
         },
-        isVisible: computed(() => !disabled.value),
-        disabled: computed(() => !(validationState.value.valid && validationState.value.modified)),
+        isVisible: computed(() => item.value?.status == "Processing"),
+        disabled: computed(() => validationState.value.modified),
       },
-      edit: {
-        clickHandler: () => {
-          disabled.value = false;
-        },
-        isVisible: computed(
-          () =>
-            // hasAccess(UserPermissions.EditSellerOrder) &&
-            // (item.value?.status === "New" || item.value?.status === "Pending") &&
-            disabled.value,
-        ),
+      cancelDocument: {
+        async clickHandler() {
+          if (item.value) {
+            item.value.status = "Canceled";
+            await saveChanges(item.value);
 
-        //disabled: computed(() => stateMachineLoading.value || !args.props.param),
-      },
-      cancelEdit: {
-        clickHandler: () => {
-          validationState.value.resetModified(validationState.value.cachedValue, true);
-          disabled.value = true;
+            args.emit("parent:call", {
+              method: "reload",
+            });
+
+            args.emit("parent:call", {
+              method: "openDetailsBlade",
+              args: {
+                param: item.value.id ?? undefined,
+              },
+            });
+          }
         },
-        isVisible: computed(() => !disabled.value),
+        isVisible: computed(() => item.value?.status == "Processing"),
+        disabled: computed(() => validationState.value.modified),
       },
-      stateMachineComputed: computed(() => toolbar.value),
+      //stateMachineComputed: computed(() => toolbar.value),
+    },
+    recalculateTotals: async (data: { quoteItem: QuoteItem }) => {
+      if (item.value && data.quoteItem) {
+        var quoteItem = data.quoteItem;
+        quoteItem.selectedTierPrice = quoteItem.proposalPrices?.find(x => x.quantity! <= quoteItem.quantity!);
+        item.value.items?.forEach(x => {
+          if(x.id === quoteItem.id){
+            x.proposalPrices = quoteItem.proposalPrices;
+            x.selectedTierPrice = quoteItem.selectedTierPrice;
+            x.comment = quoteItem.comment;
+          }
+        });
+        item.value = await (await getApiClient()).calculateTotals(item.value);
+        item.value.items?.forEach(x => {
+            x.total = (x.selectedTierPrice?.price ?? x.salePrice ?? x.listPrice)! * x.quantity!;
+            x.proposedPrice = x.selectedTierPrice?.price ?? x.salePrice;
+        });
+
+      }
     },
     shippingInfo,
     calculateTotals,
@@ -309,7 +336,6 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
       const date = new Date(item.value?.createdDate ?? "");
       return moment(date).locale(currentLocale.value).format("L LT");
     }),
-    saveShipping,
   };
 
   watch(
@@ -367,24 +393,8 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
     return result;
   }
 
-  async function saveShipping(arg: { items: OrderShipment[] }) {
-    // if (item.value) {
-    //   item.value.shipments = arg.items.map(
-    //     (x) =>
-    //       new OrderShipment({
-    //         ...x,
-    //         items: x.items?.map(
-    //           (item) => new OrderShipmentItem({ ...item, lineItem: new OrderLineItem(item.lineItem) }),
-    //         ),
-    //       }),
-    //   );
-
-    //   await saveChanges(item.value);
-
-    //   args.emit("parent:call", {
-    //     method: "reload",
-    //   });
-    // }
+  function recalculateTotals() {
+alert("BOO!!!");
   }
 
   return {

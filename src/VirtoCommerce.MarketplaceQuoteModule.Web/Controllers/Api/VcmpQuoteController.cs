@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Commands;
@@ -73,5 +74,22 @@ public class VcmpQuoteController : ControllerBase
         }
         var result = await _mediator.Send(command);
         return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("update")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+    public async Task<ActionResult> Update([FromBody] QuoteRequest quoteRequest)
+    {
+        var command = ExType<UpdateQuoteRequestCommand>.New();
+        command.QuoteRequest = quoteRequest;
+
+        var authorizationResult = await _authorizationService.AuthorizeAsync(User, command, new SellerAuthorizationRequirement(Permissions.Update));
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+        await _mediator.Send(command);
+        return NoContent();
     }
 }

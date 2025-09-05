@@ -196,6 +196,54 @@ export class VcmpQuoteClient extends AuthApiBase {
         }
         return Promise.resolve<QuoteRequest>(null as any);
     }
+
+    /**
+     * @param body (optional)
+     * @return No Content
+     */
+    update(body?: QuoteRequest | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/vcmp/quote/update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json-patch+json",
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.processUpdate(_response);
+        });
+    }
+
+    protected processUpdate(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
 }
 
 export enum AddressType {
@@ -2558,7 +2606,8 @@ export class QuoteItem implements IQuoteItem {
     proposalPrices?: TierPrice[] | undefined;
     configurationItems?: QuoteConfigurationItem[] | undefined;
     id?: string | undefined;
-    extendedPrice: number;
+    total: number;
+    proposedPrice: number | undefined;
 
     constructor(data?: IQuoteItem) {
         if (data) {
