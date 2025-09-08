@@ -155,21 +155,6 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
         ];
   });
 
-  const { loading: pdfLoading, action: loadPdf } = useAsync(async () => {
-    if (item.value?.number) {
-    //   const response = await (await getOrderApiClient()).getInvoicePdf(item.value.number);
-    //   const dataType = response.data.type;
-    //   const binaryData = [];
-    //   binaryData.push(response.data);
-    //   const downloadLink = document.createElement("a");
-    //   downloadLink.href = window.URL.createObjectURL(new Blob(binaryData, { type: dataType }));
-    //   downloadLink.setAttribute("download", response.fileName || `Invoice ${item.value.number}`);
-    //   document.body.appendChild(downloadLink);
-    //   downloadLink.click();
-    //   document.body.removeChild(downloadLink);
-    }
-  });
-
   const { loading: calculateTotalsLoading, action: calculateTotals } = useAsync(async () => {
     if (item.value?.id) {
       item.value = await (await getApiClient()).calculateTotals(item.value);
@@ -183,38 +168,15 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
     }).format(typeof value === "undefined" ? 0 : value);
   };
 
-  async function onItemClick(item: QuoteItem) {
+  async function onItemClick(quoteItem: QuoteItem) {
     await openBlade({
       blade: resolveBladeByName("QuoteItemProposalPrices"),
-      options: {item: item},
+      options:
+      {
+        item: quoteItem,
+        disabled: item.value?.status != "Processing"
+      },
     });
-
-    // if (disabled.value) {
-    //   try {
-    //     catalogLoading.value = true;
-    //     const offersQuery = new SearchOffersQuery({ skus: item.sku ? [item.sku] : [] });
-    //     const items = await (await getCatalogApiClient()).searchOffers(offersQuery);
-
-    //     if (items.results && items.results.length > 0) {
-    //       await openBlade({
-    //         blade: resolveBladeByName("Offer"),
-    //         param: items.results[0].id,
-    //         onOpen: () => {
-    //           selectedItemId.value = item.id;
-    //         },
-    //         onClose: () => {
-    //           selectedItemId.value = undefined;
-    //         },
-    //       });
-    //     } else {
-    //       showInfo(computed(() => t("ORDERS.PAGES.DETAILS.FORM.OFFERS.NOT_FOUND")));
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //   } finally {
-    //     catalogLoading.value = false;
-    //   }
-    // }
   }
 
   const scope: QuoteScope = {
@@ -391,10 +353,6 @@ export const useQuote = (args: DetailsComposableArgs): UseDetails<QuoteRequest, 
   async function GetSellerId(): Promise<string> {
     const result = route?.params?.sellerId as string;
     return result;
-  }
-
-  function recalculateTotals() {
-alert("BOO!!!");
   }
 
   return {

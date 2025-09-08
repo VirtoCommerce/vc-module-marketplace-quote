@@ -23,11 +23,12 @@ export interface QuoteItemProposalPricesScope extends DetailsBaseBladeScope {
 }
 
 export const useProposalPrices = (
-  args: DetailsComposableArgs<{ options?: { item: QuoteItem } }>,
+  args: DetailsComposableArgs<{ options?: { item: QuoteItem, disabled: boolean } }>,
 ): UseDetails<QuoteItem, QuoteItemProposalPricesScope> => {
   const { t } = useI18n({ useScope: "global" });
 
   const internalModel = ref<QuoteItem | undefined>(_.cloneDeep(args.props.options?.item));
+  const isDisabled = ref<boolean>(args.props.options?.disabled ?? false);
 
   const detailsFactory = useDetailsFactory<QuoteItem>({
     load: async () => {
@@ -68,6 +69,7 @@ export const useProposalPrices = (
     pricesToAdd,
     removePrice,
     addPrice,
+    disabled: computed(() => isDisabled.value),
     toolbarOverrides: {
       applyChanges: {
         async clickHandler() {
@@ -81,6 +83,7 @@ export const useProposalPrices = (
 
           args.emit("close:blade");
         },
+        isVisible: !isDisabled.value,
         disabled: computed(() => {
           return !(
             item.value?.proposalPrices &&
@@ -95,6 +98,7 @@ export const useProposalPrices = (
           await saveChanges(item.value);
           args.emit("close:blade");
         },
+        isVisible: !isDisabled.value,
         disabled: computed(() => {
           return !(
             item.value?.proposalPrices &&

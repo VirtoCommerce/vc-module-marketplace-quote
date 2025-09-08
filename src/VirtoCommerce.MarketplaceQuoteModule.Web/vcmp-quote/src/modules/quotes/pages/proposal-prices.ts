@@ -59,6 +59,9 @@ export const proposalPrices: DynamicDetailsSchema = {
                   title: "QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.DELETE",
                   type: "danger",
                   method: "removePrice",
+                  disabled: {
+                    method: "disabled",
+                  },
                 },
               ],
               columns: [
