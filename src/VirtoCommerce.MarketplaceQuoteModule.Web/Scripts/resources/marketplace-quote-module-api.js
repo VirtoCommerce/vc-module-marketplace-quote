@@ -1,4 +1,4 @@
-angular.module('VirtoCommerce.MarketplaceQuoteModule')
-    .factory('VirtoCommerce.MarketplaceQuoteModule.webApi', ['$resource', function ($resource) {
+angular.module('virtoCommerce.marketplaceQuoteModule')
+    .factory('virtoCommerce.marketplaceQuoteModule.webApi', ['$resource', function ($resource) {
         return $resource('api/marketplace-quote-module');
     }]);
