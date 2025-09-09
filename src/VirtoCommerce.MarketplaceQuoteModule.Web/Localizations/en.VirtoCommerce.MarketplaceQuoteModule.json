@@ -1,4 +1,9 @@
 {
+  "marketplaceQuote": {
+    "state-machine-entity-types": {
+      "quote-request": "Quote request"
+    }
+  },
   "settings": {
     "Quotes": {
       "SplitEnabled": {
