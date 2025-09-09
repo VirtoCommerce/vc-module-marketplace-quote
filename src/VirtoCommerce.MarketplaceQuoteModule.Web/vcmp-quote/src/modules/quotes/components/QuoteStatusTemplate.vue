@@ -34,11 +34,19 @@ const statusStyle = (status: string) => {
       result.outline = false;
       result.variant = "primary";
       break;
-    case "Proposal sent":
+    case "Ordered":
       result.outline = false;
       result.variant = "success";
       break;
+    case "Proposal sent":
+      result.outline = false;
+      result.variant = "info";
+      break;
     case "Canceled":
+      result.outline = true;
+      result.variant = "danger";
+      break;
+    case "Declined":
       result.outline = true;
       result.variant = "danger";
       break;
