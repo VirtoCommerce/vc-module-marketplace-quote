@@ -34,4 +34,9 @@ public static class ModuleConstants
             }
         }
     }
+
+    public static class StateMachineObjectType
+    {
+        public const string QuoteRequest = "VirtoCommerce.QuoteModule.Core.Models.QuoteRequest";
+    }
 }

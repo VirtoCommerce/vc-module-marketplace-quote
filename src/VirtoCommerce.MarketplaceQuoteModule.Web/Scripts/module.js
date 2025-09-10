@@ -27,9 +27,15 @@ angular.module(moduleName, [])
         //        });
         }
     ])
-    .run(['platformWebApp.mainMenuService', '$state',
+    .run(['$http', '$compile',
+        'platformWebApp.mainMenuService', '$state',
+        'virtoCommerce.marketplaceQuoteModule.webApi',
+        'virtoCommerce.coreModule.common.dynamicExpressionService', 
         'virtoCommerce.stateMachineModule.stateMachineTypes',
-        function (mainMenuService, $state,
+        function ($http, $compile,
+            mainMenuService, $state,
+            webApi,
+            dynamicExpressionService,
             stateMachineTypes) {
             //Register module in main menu
             //var menuItem = {
@@ -45,7 +51,20 @@ angular.module(moduleName, [])
             // Quote request state machine entity type registration
             stateMachineTypes.addType({
                 caption: 'marketplaceQuote.state-machine-entity-types.quote-request',
-                value: 'VirtoCommerce.QuoteModule.Core.Models.QuoteRequest'
+                value: 'VirtoCommerce.QuoteModule.Core.Models.QuoteRequest',
+                getConditionTreeCallback: webApi.getQuoteRequestConditionPrototype
+            });
+
+            // State machine transition's condition template registration
+            dynamicExpressionService.registerExpression({
+                id: 'QuoteRequestCondition',
+                displayName: 'Quote request condition ...',
+                templateURL: 'QuoteRequestCondition.html',
+                newChildLabel: 'Add condition'
+            });
+
+            $http.get('Modules/$(VirtoCommerce.MarketplaceQuote)/Scripts/dynamicConditions/templates.html').then(function (response) {
+                $compile(response.data);
             });
 
         }

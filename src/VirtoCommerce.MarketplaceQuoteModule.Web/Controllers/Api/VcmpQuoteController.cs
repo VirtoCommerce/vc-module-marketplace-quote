@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
+using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Conditions;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Commands;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Queries;
 using VirtoCommerce.MarketplaceVendorModule.Core.Common;
@@ -91,5 +92,15 @@ public class VcmpQuoteController : ControllerBase
         }
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("condition/prototype")]
+    public ActionResult<QuoteRequestCondition> GetConditionPrototype()
+    {
+        var query = ExType<GetQuoteRequestConditionPrototypeQuery>.New();
+        var result = _mediator.Send(query);
+
+        return Ok(result);
     }
 }

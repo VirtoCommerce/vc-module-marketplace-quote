@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.CoreModule.Core.Conditions;
 using VirtoCommerce.MarketplaceQuoteModule.Core;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
+using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Conditions;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
 using VirtoCommerce.MarketplaceQuoteModule.Data;
@@ -80,6 +82,12 @@ public class Module : IModule, IHasConfiguration
         AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
 
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteEventHandler>();
+
+        // Register condition trees expressions into the AbstractFactory<IConditionTree>
+        foreach (var conditionTree in AbstractTypeFactory<QuoteRequestConditionTreePrototype>.TryCreateInstance().Traverse<IConditionTree>(x => x.AvailableChildren))
+        {
+            AbstractTypeFactory<IConditionTree>.RegisterType(conditionTree.GetType());
+        }
 
         // Apply migrations
         using var serviceScope = serviceProvider.CreateScope();
