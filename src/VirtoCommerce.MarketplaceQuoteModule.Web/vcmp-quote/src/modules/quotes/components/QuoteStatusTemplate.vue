@@ -32,7 +32,7 @@ const statusStyle = (status: string) => {
   switch (status) {
     case "Processing":
       result.outline = false;
-      result.variant = "primary";
+      result.variant = "info";
       break;
     case "Ordered":
       result.outline = false;
@@ -40,7 +40,7 @@ const statusStyle = (status: string) => {
       break;
     case "Proposal sent":
       result.outline = false;
-      result.variant = "info";
+      result.variant = "primary";
       break;
     case "Canceled":
       result.outline = true;
@@ -48,7 +48,7 @@ const statusStyle = (status: string) => {
       break;
     case "Declined":
       result.outline = true;
-      result.variant = "danger";
+      result.variant = "warning";
       break;
   }
   return result;
