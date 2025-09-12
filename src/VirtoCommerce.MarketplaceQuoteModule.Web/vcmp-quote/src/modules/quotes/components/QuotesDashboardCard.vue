@@ -38,13 +38,13 @@
 
 <script setup lang="ts">
 import { useBladeNavigation, ITableColumns, DashboardWidgetCard } from "@vc-shell/framework";
-import { useQuotes } from "../composables/useQuotes";
+import { useQuotesList } from "../composables/useQuotesList";
 import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { QuoteRequest } from "src/api_client/virtocommerce.marketplacequote";
+import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
 
 const { openBlade, resolveBladeByName } = useBladeNavigation();
-const { load, items, pagination, loading } = useQuotes();
+const { loadQuotes, items, loading } = useQuotesList();
 const { t } = useI18n({
   useScope: "global",
 });
@@ -71,7 +71,7 @@ const columns: ITableColumns[] = [
 ];
 
 onMounted(() => {
-  load({
+  loadQuotes({
     take: 5,
   });
 });
@@ -79,7 +79,7 @@ onMounted(() => {
 async function onItemClick(args?: QuoteRequest) {
   await openBlade(
     {
-      blade: resolveBladeByName("Quotes"),
+      blade: resolveBladeByName("QuotesListNew"),
       param: args?.id,
     },
     true,
@@ -87,7 +87,7 @@ async function onItemClick(args?: QuoteRequest) {
 
   if (args?.id) {
     await openBlade({
-      blade: resolveBladeByName("QuoteDetails"),
+      blade: resolveBladeByName("QuoteDetailsNew"),
       param: args?.id,
     });
   }

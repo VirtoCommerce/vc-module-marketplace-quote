@@ -30,6 +30,7 @@
           "FILTER": {
             "STATUS": {
               "TITLE": "Status filter",
+              "ALL": "All statuses",
               "None": "None",
               "Unpaid": "Unpaid",
               "Paid": "Paid",
@@ -44,6 +45,15 @@
             }
           }
         },
+        "FILTERS": {
+          "APPLY": "Apply",
+          "RESET": "Reset"
+        },
+        "SEARCH": {
+          "PLACEHOLDER": "Search quotes..."
+        },
+        "EMPTY_MESSAGE": "No quotes found.",
+        "NOT_FOUND_MESSAGE": "No quotes match your search criteria.",
         "NOT_FOUND": {
           "EMPTY": "No quote requests found.",
           "RESET": "Reset search"
@@ -112,22 +122,33 @@
         }
       },
       "PROPOSAL_PRICES": {
+        "TITLE": "Proposal Prices",
         "TOOLBAR": {
           "APPLY": "Apply",
-          "CANCEL":"Cancel"
+          "CANCEL": "Cancel",
+          "RESET": "Reset"
         },
         "FIELDS": {
+          "PRODUCT_INFO": "Product Information",
           "NAME": "Quote Item",
           "PRICING": "Proposal prices",
+          "TIER_PRICES": "Tier Prices",
           "ADD_PRICE": "Add price",
           "DELETE": "Delete",
+          "ACTIONS": "Actions",
           "MIN_QTY": "Quantity",
           "PRICE": "Price per item",
-          "COMMENT":{
+          "COMMENT": {
             "TITLE": "Comment",
-            "PLACEHOLDER": "Comment"
+            "PLACEHOLDER": "Add a comment about these prices..."
           }
-        }
+        },
+        "EMPTY": {
+          "TITLE": "No Proposal Prices",
+          "DESCRIPTION": "Add tier prices to provide different pricing options based on quantity."
+        },
+        "RESET_CONFIRMATION": "Are you sure you want to reset all changes?",
+        "CLOSE_CONFIRMATION": "You have unsaved changes. Close anyway?"
       },
       "ALERTS": {
         "CLOSE_CONFIRMATION": "You have unsaved changes. Close anyway?",

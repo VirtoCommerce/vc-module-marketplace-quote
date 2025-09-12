@@ -1,3 +1,3 @@
-export { useQuote, type QuoteScope } from "./useQuote";
-export { useQuotes, type QuotesListScope } from "./useQuotes";
-export { useProposalPrices, type QuoteItemProposalPricesScope } from "./useProposalPrices";
+export { useQuotesList } from "./useQuotesList";
+export { useQuoteDetails } from "./useQuoteDetails";
+export { useProposalPrices } from "./useProposalPrices";

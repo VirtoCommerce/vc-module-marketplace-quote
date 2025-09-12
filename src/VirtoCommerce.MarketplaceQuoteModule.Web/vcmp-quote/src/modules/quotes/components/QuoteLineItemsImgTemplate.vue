@@ -78,19 +78,17 @@
 </template>
 
 <script lang="ts" setup>
-import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
+import { QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { computed } from "vue";
 
 export interface Props {
-  context: {
-    item: QuoteRequest;
-  };
+  items: QuoteItem[] | undefined;
 }
 
 const props = defineProps<Props>();
 
 const imgData = computed(() => {
-  const itemsWithImages = props.context.item.items?.filter((item) => item.imageUrl) ?? [];
+  const itemsWithImages = props.items?.filter((item) => item.imageUrl) ?? [];
   return {
     quantity: itemsWithImages.length,
     srcArr: itemsWithImages.map((item) => item.imageUrl),

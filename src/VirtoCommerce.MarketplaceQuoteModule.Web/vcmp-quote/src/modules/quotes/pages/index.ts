@@ -1,4 +1,3 @@
-import { grid as quotesList } from "./grid";
-import { details as quotesDetails } from "./details";
-import { proposalPrices } from "./proposal-prices";
-export { quotesList, quotesDetails, proposalPrices };
+export { default as QuotesListNew } from "./quotes-list.vue";
+export { default as QuoteDetailsNew } from "./quote-details.vue";
+export { default as ProposalPricesNew } from "./proposal-prices.vue";

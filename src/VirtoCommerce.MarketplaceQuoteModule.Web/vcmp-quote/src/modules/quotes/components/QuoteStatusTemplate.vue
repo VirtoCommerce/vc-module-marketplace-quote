@@ -1,26 +1,22 @@
 <template>
   <div class="tw-flex">
     <VcStatus
-      v-bind="statusStyle(context.item.status as string)"
+      v-bind="statusStyle(status)"
       :dot="$isMobile.value"
     >
-      {{ context.item.status }}
+      {{ status }}
     </VcStatus>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
-
 export interface Props {
-  context: {
-    item: QuoteRequest;
-  };
+  status: string | undefined;
 }
 
 defineProps<Props>();
 
-const statusStyle = (status: string) => {
+const statusStyle = (status: string | undefined) => {
   const result: {
     outline: boolean;
     variant: "info" | "warning" | "danger" | "success" | "light-danger" | "info-dark" | "primary";

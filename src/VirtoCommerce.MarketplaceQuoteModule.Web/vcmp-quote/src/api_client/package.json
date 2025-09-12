@@ -7,22 +7,30 @@
   ],
   "exports": {
     "./marketplacequote": {
-      "import": "./dist\\virtocommerce.marketplacequote.js",
-      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+      "import": "./dist/virtocommerce.marketplacequote.js",
+      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
     },
     "./virtocommerce.marketplacequote": {
-      "import": "./dist\\virtocommerce.marketplacequote.js",
-      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+      "import": "./dist/virtocommerce.marketplacequote.js",
+      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
+    },
+    "./statemachine": {
+      "import": "./dist/virtocommerce.statemachine.js",
+      "types": "./dist/types/virtocommerce.statemachine.d.ts"
+    },
+    "./virtocommerce.statemachine": {
+      "import": "./dist/virtocommerce.statemachine.js",
+      "types": "./dist/types/virtocommerce.statemachine.d.ts"
     },
     ".": {
-      "import": "./dist\\virtocommerce.marketplacequote.js",
-      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+      "import": "./dist/virtocommerce.marketplacequote.js",
+      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
     }
   },
   "apiClientGenerator": {
-    "version": "1.0.0",
-    "generatedAt": "2025-09-04T12:59:11.179Z"
+    "version": "1.0.1",
+    "generatedAt": "2025-09-12T08:51:35.211Z"
   },
-  "module": "./dist\\virtocommerce.marketplacequote.js",
-  "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
+  "module": "./dist/virtocommerce.marketplacequote.js",
+  "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
 }
