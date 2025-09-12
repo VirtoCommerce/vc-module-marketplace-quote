@@ -158,8 +158,6 @@ defineEmits<Emits>();
 
 const { t } = useI18n({ useScope: "global" });
 const { openBlade } = useBladeNavigation();
-const { showConfirmation } = usePopup();
-const { hasAccess } = usePermissions();
 
 const { sortExpression, handleSortChange: tableSortHandler } = useTableSort({
   initialDirection: "DESC",
@@ -173,7 +171,6 @@ const {
   currentPage,
   searchQuery,
   loadQuotes,
-  deleteQuotes,
   loading,
   statuses,
   stagedFilters,
@@ -249,26 +246,6 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     title: t("QUOTES.PAGES.LIST.TOOLBAR.REFRESH"),
     clickHandler: async () => {
       await reload();
-    },
-  },
-  {
-    id: "deleteSelected",
-    icon: "material-delete",
-    title: t("QUOTES.PAGES.LIST.TOOLBAR.DELETE"),
-    disabled: selectedItems.value.length === 0,
-    isVisible: hasAccess(["quote:delete"]),
-    clickHandler: async () => {
-      if (
-        await showConfirmation(
-          t("QUOTES.PAGES.LIST.DELETE_CONFIRMATION", {
-            count: selectedItems.value.length,
-          }),
-        )
-      ) {
-        await deleteQuotes({ ids: selectedItems.value });
-        await reload();
-        selectedItems.value = [];
-      }
     },
   },
 ]);

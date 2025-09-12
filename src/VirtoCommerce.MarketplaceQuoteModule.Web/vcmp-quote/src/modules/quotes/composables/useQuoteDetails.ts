@@ -130,8 +130,13 @@ export function useQuoteDetails(): IUseQuoteDetails {
       return acc;
     }, [] as IShippingInfo[]);
 
-    return info && info.length
-      ? info
+    const sortedInfo = info?.sort((a, b) => {
+      const order = ["Sold to", "Ship to", "Pick-up at"];
+      return order.indexOf(a.label) - order.indexOf(b.label);
+    });
+
+    return sortedInfo && sortedInfo.length
+      ? sortedInfo
       : [
           { label: t("QUOTES.PAGES.DETAILS.FORM.BUYER_RECIPIENT.SOLD_TO") },
           { label: t("QUOTES.PAGES.DETAILS.FORM.BUYER_RECIPIENT.SHIP_TO") },

@@ -26,7 +26,6 @@ export interface IUseQuotesList {
   currentPage: ComputedRef<number>;
   searchQuery: Ref<ISearchQuoteRequestsQuery>;
   loadQuotes: (query?: ISearchQuoteRequestsQuery) => Promise<void>;
-  deleteQuotes: (query?: { ids: string[] }) => Promise<void>;
   loading: ComputedRef<boolean>;
   statuses: ComputedRef<Array<{ value: string | undefined; displayValue: string | undefined }>>;
 
@@ -81,14 +80,6 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
         sellerId: sellerId,
       }),
     );
-  });
-
-  const { action: deleteQuotes, loading: deletingQuotes } = useAsync<{ ids: string[] }>(async (_query) => {
-    const ids = _query?.ids;
-    if (ids && ids.length > 0) {
-      const apiClient = await getApiClient();
-      await (apiClient as any).deleteQuoteRequests(ids);
-    }
   });
 
   // Filter state
@@ -213,8 +204,7 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
     currentPage: computed(() => Math.ceil((searchQuery.value?.skip || 0) / Math.max(1, pageSize) + 1)),
     searchQuery,
     loadQuotes,
-    deleteQuotes,
-    loading: useLoading(loadingQuotes, deletingQuotes, getAllStatesLoading),
+    loading: useLoading(loadingQuotes, getAllStatesLoading),
     statuses,
     getAllStates,
     // Filters
