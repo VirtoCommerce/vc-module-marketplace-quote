@@ -1,5 +1,11 @@
 import { computed, ref, ComputedRef, Ref } from "vue";
-import { useAsync, useApiClient, useLoading, useModificationTracker } from "@vc-shell/framework";
+import { useAsync, useApiClient, useLoading, useModificationTracker, IBladeToolbar, useBladeNavigation } from "@vc-shell/framework";
+import {
+  GetStateMachineInstanceForEntityQuery,
+  FireStateMachineTriggerCommand,
+  StateMachineClient,
+  StateMachineInstance,
+} from "../../../api_client/virtocommerce.statemachine";
 import {
   VcmpQuoteClient,
   QuoteRequest,
@@ -45,11 +51,19 @@ export interface IUseQuoteDetails {
   quoteGrandTotalWithTaxes: ComputedRef<string | 0 | undefined>;
   createdDate: ComputedRef<string>;
   resetModificationState: () => void;
+  toolbar: Ref<IBladeToolbar[]>;
 }
+
+const ENTITY_TYPE = "VirtoCommerce.QuoteModule.Core.Models.QuoteRequest";
 
 export function useQuoteDetails(): IUseQuoteDetails {
   const { getApiClient } = useApiClient(VcmpQuoteClient);
+  const { getApiClient: getStateMachineApiClient } = useApiClient(StateMachineClient);
   const { t } = useI18n({ useScope: "global" });
+  const toolbar = ref([]) as Ref<IBladeToolbar[]>;
+  const stateMachineInstance = ref<StateMachineInstance>();
+  const stateMachineLoading = ref(false);
+  const { onParentCall } = useBladeNavigation();
 
   const locale = window.navigator.language;
 
@@ -66,6 +80,17 @@ export function useQuoteDetails(): IUseQuoteDetails {
         (quoteItem.selectedTierPrice?.price ?? quoteItem.salePrice ?? quoteItem.listPrice)! * quoteItem.quantity!;
       quoteItem.proposedPrice = quoteItem.selectedTierPrice?.price ?? quoteItem.salePrice;
     });
+
+      stateMachineInstance.value = await (
+        await getStateMachineApiClient()
+      ).getStateMachineForEntity(
+        new GetStateMachineInstanceForEntityQuery({
+          entityId: result.id!,
+          entityType: ENTITY_TYPE,
+          locale: locale,
+        }),
+      );
+      refreshToolbar(stateMachineInstance.value ?? {});
 
     currentValue.value = result;
 
@@ -100,6 +125,43 @@ export function useQuoteDetails(): IUseQuoteDetails {
         x.proposedPrice = x.selectedTierPrice?.price ?? x.salePrice;
       });
     }
+  };
+
+  const refreshToolbar = (sm: StateMachineInstance) => {
+    toolbar.value.splice(0);
+
+    sm?.currentState?.transitions?.forEach((transition, index) => {
+      if (sm?.permittedTriggers?.includes(transition.trigger!)) {
+        toolbar.value.push({
+          id: transition.trigger,
+          title: transition.localizedValue ?? transition.trigger,
+          icon: transition.icon ?? "grading",
+          disabled: computed(() => stateMachineLoading.value),
+          separator: index === 0 ? "left" : undefined,
+          async clickHandler() {
+            try {
+              stateMachineLoading.value = true;
+              const currentStateMachine = await (
+                await getStateMachineApiClient()
+              ).fireTrigger(new FireStateMachineTriggerCommand({
+                stateMachineInstanceId: sm.id!,
+                trigger: transition.trigger!,
+                entityId: sm.entityId!
+              }));
+
+              onParentCall({ method: "reload" });
+              onParentCall({ method: "onItemClick", args: currentValue.value });
+
+              refreshToolbar(currentStateMachine);
+            } catch (error) {
+              console.error(error);
+            } finally {
+              stateMachineLoading.value = false;
+            }
+          },
+        });
+      }
+    });
   };
 
   const shippingInfo = computed((): IShippingInfo[] => {
@@ -189,5 +251,6 @@ export function useQuoteDetails(): IUseQuoteDetails {
     quoteGrandTotalWithTaxes,
     createdDate,
     resetModificationState,
+    toolbar
   };
 }

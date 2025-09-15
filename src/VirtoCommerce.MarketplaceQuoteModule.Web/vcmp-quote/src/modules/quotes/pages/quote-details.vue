@@ -240,6 +240,7 @@ const {
   quoteGrandTotalWithTaxes,
   createdDate,
   resetModificationState,
+  toolbar,
 } = useQuoteDetails();
 
 const bladeTitle = computed(() => item.value.number);
@@ -325,54 +326,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     isVisible: item.value?.status == "Processing",
     disabled: !isModified.value,
   },
-  {
-    id: "submit",
-    title: t("QUOTES.PAGES.DETAILS.TOOLBAR.SUBMIT_PROPOSAL"),
-    icon: "material-check",
-    async clickHandler() {
-      if (item.value) {
-        item.value.status = "Proposal sent";
-        await saveQuote(item.value);
-
-        emit("parent:call", {
-          method: "reload",
-        });
-
-        emit("parent:call", {
-          method: "openDetailsBlade",
-          args: {
-            param: item.value.id ?? undefined,
-          },
-        });
-      }
-    },
-    isVisible: item.value?.status == "Processing",
-    disabled: isModified.value,
-  },
-  {
-    id: "cancel",
-    title: t("QUOTES.PAGES.DETAILS.TOOLBAR.CANCEL_DOCUMENT"),
-    icon: "material-cancel",
-    async clickHandler() {
-      if (item.value) {
-        item.value.status = "Canceled";
-        await saveQuote(item.value);
-
-        emit("parent:call", {
-          method: "reload",
-        });
-
-        emit("parent:call", {
-          method: "openDetailsBlade",
-          args: {
-            param: item.value.id ?? undefined,
-          },
-        });
-      }
-    },
-    isVisible: item.value?.status == "Processing",
-    disabled: isModified.value,
-  },
+  ...toolbar.value,
 ]);
 
 async function onClose() {

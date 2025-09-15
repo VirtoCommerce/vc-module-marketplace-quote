@@ -6,23 +6,31 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.QuoteModule.Core;
 using VirtoCommerce.QuoteModule.Core.Events;
 using VirtoCommerce.QuoteModule.Core.Services;
+using VirtoCommerce.StateMachineModule.Core.Services;
+using static VirtoCommerce.MarketplaceQuoteModule.Core.ModuleConstants;
 using ModuleConstants = VirtoCommerce.MarketplaceQuoteModule.Core.ModuleConstants;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Data.Handlers;
-public class SubmitQuoteEventHandler : IEventHandler<QuoteRequestChangeEvent>
+public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEvent>
 {
     private readonly IQuoteRequestService _quoteRequestService;
     private readonly IQuoteRequestSplitter _quoteRequestSplitter;
+    private readonly IStateMachineDefinitionService _stateMachineDefinitionService;
+    private readonly IStateMachineInstanceService _stateMachineInstanceService;
     private readonly ISettingsManager _settingsManager;
 
-    public SubmitQuoteEventHandler(
+    public SubmitQuoteRequestEventHandler(
         IQuoteRequestService quoteRequestService,
         IQuoteRequestSplitter quoteRequestSplitter,
+        IStateMachineDefinitionService stateMachineDefinitionService,
+        IStateMachineInstanceService stateMachineInstanceService,
         ISettingsManager settingsManager
         )
     {
         _quoteRequestService = quoteRequestService;
         _quoteRequestSplitter = quoteRequestSplitter;
+        _stateMachineDefinitionService = stateMachineDefinitionService;
+        _stateMachineInstanceService = stateMachineInstanceService;
         _settingsManager = settingsManager;
     }
 
@@ -40,10 +48,22 @@ public class SubmitQuoteEventHandler : IEventHandler<QuoteRequestChangeEvent>
             if (quoteRequest.NewEntry.Status != quoteRequest.OldEntry.Status
                 && quoteRequest.NewEntry.Status == QuoteStatus.Processing)
             {
+                var quoteRequestStateMachineDefinition = await _stateMachineDefinitionService.GetActiveStateMachineDefinitionAsync(StateMachineObjectType.QuoteRequest);
+
                 var splittedQuoteRequests = await _quoteRequestSplitter.SplitQuoteRequest(quoteRequest.NewEntry);
 
                 if (splittedQuoteRequests.Any())
                 {
+                    foreach (var splittedQuoteRequest in splittedQuoteRequests)
+                    {
+                        var existedStateMachineInstance = await _stateMachineInstanceService.GetForEntity(splittedQuoteRequest.Id, StateMachineObjectType.QuoteRequest);
+                        if (existedStateMachineInstance == null
+                            && quoteRequestStateMachineDefinition != null)
+                        {
+                            var stateMachineInstance = await _stateMachineInstanceService.CreateStateMachineInstanceAsync(quoteRequestStateMachineDefinition.Id, null, splittedQuoteRequest, splittedQuoteRequest.Status);
+                        }
+                    }
+
                     using (EventSuppressor.SuppressEvents())
                     {
                         await _quoteRequestService.SaveChangesAsync(splittedQuoteRequests);

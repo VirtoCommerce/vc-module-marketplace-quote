@@ -22,7 +22,7 @@ public class VcmpQuoteRequest : QuoteRequest, IHasSellerId
 
         if (!fullClone)
         {
-            copied.Id = null;
+            copied.Id = Guid.NewGuid().ToString();
             copied.CreatedBy = null;
             copied.CreatedDate = DateTime.MinValue;
             copied.ModifiedBy = null;

@@ -28,6 +28,7 @@ using VirtoCommerce.QuoteModule.Core.Models;
 using VirtoCommerce.QuoteModule.Core.Services;
 using VirtoCommerce.QuoteModule.Data.Model;
 using VirtoCommerce.QuoteModule.Data.Repositories;
+using VirtoCommerce.StateMachineModule.Core.Events;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Web;
 
@@ -62,7 +63,9 @@ public class Module : IModule, IHasConfiguration
         serviceCollection.AddTransient<IQuoteRequestService, VcmpQuoteRequestService>();
         serviceCollection.AddTransient<IQuoteRequestSplitter, QuoteRequestSplitter>();
 
-        serviceCollection.AddTransient<SubmitQuoteEventHandler>();
+        serviceCollection.AddTransient<CreateQuoteRequestEventHandler>();
+        serviceCollection.AddTransient<SubmitQuoteRequestEventHandler>();
+        serviceCollection.AddTransient<StateMachineTriggerEventHandler>();
 
         serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
 
@@ -81,7 +84,9 @@ public class Module : IModule, IHasConfiguration
 
         AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
 
-        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteEventHandler>();
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, CreateQuoteRequestEventHandler>();
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteRequestEventHandler>();
+        appBuilder.RegisterEventHandler<StateMachineTriggerEvent, StateMachineTriggerEventHandler>();
 
         // Register condition trees expressions into the AbstractFactory<IConditionTree>
         foreach (var conditionTree in AbstractTypeFactory<QuoteRequestConditionTreePrototype>.TryCreateInstance().Traverse<IConditionTree>(x => x.AvailableChildren))

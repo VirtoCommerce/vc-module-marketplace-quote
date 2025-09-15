@@ -26,7 +26,7 @@ public class QuoteRequestSplitter : IQuoteRequestSplitter
 
         var byProductIdSellerMap = await _sellerResolver.ResolveByProductIds(quoteRequest.Items.Select(x => x.ProductId).ToArray());
         var sellerQuoteRequestsMap = new Dictionary<string, VcmpQuoteRequest>().WithDefaultValue(null);
-        bool theFirstSeller = true;
+        bool isFirstSeller = true;
 
         foreach (var quoteRequestItem in quoteRequestItems)
         {
@@ -34,12 +34,12 @@ public class QuoteRequestSplitter : IQuoteRequestSplitter
             var vcmpQuoteRequest = sellerQuoteRequestsMap[seller?.Id ?? string.Empty];
             if (vcmpQuoteRequest == null)
             {
-                vcmpQuoteRequest = ExType<VcmpQuoteRequest>.New().FromQuoteRequest(quoteRequest, theFirstSeller);
+                vcmpQuoteRequest = ExType<VcmpQuoteRequest>.New().FromQuoteRequest(quoteRequest, isFirstSeller);
                 vcmpQuoteRequest.SellerId = seller?.Id;
                 vcmpQuoteRequest.SellerName = seller?.Name;
                 vcmpQuoteRequest.Items = new List<QuoteItem>();
                 sellerQuoteRequestsMap[seller?.Id ?? string.Empty] = vcmpQuoteRequest;
-                theFirstSeller = false;
+                isFirstSeller = false;
             }
             quoteRequestItem.Id = null;
             vcmpQuoteRequest.Items.Add(quoteRequestItem);
