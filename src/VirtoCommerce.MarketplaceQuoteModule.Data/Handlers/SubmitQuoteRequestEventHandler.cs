@@ -54,18 +54,24 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
 
                 if (splittedQuoteRequests.Any())
                 {
-                    foreach (var splittedQuoteRequest in splittedQuoteRequests)
-                    {
-                        var existedStateMachineInstance = await _stateMachineInstanceService.GetForEntity(splittedQuoteRequest.Id, StateMachineObjectType.QuoteRequest);
-                        if (existedStateMachineInstance == null
-                            && quoteRequestStateMachineDefinition != null)
-                        {
-                            var stateMachineInstance = await _stateMachineInstanceService.CreateStateMachineInstanceAsync(quoteRequestStateMachineDefinition.Id, null, splittedQuoteRequest, splittedQuoteRequest.Status);
-                        }
-                    }
-
                     using (EventSuppressor.SuppressEvents())
                     {
+                        foreach (var splittedQuoteRequest in splittedQuoteRequests)
+                        {
+                            var existedStateMachineInstance = await _stateMachineInstanceService.GetForEntity(splittedQuoteRequest.Id, StateMachineObjectType.QuoteRequest);
+                            if (existedStateMachineInstance == null)
+                            {
+                                if (quoteRequestStateMachineDefinition != null)
+                                {
+                                    _ = await _stateMachineInstanceService.CreateStateMachineInstanceAsync(quoteRequestStateMachineDefinition.Id, null, splittedQuoteRequest, splittedQuoteRequest.Status);
+                                }
+                            }
+                            else
+                            {
+                                _ = await _stateMachineInstanceService.ForceSetState(existedStateMachineInstance.Id, splittedQuoteRequest.Status);
+                            }
+                        }
+
                         await _quoteRequestService.SaveChangesAsync(splittedQuoteRequests);
                     }
                 }
