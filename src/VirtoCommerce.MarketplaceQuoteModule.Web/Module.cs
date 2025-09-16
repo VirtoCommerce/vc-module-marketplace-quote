@@ -65,6 +65,7 @@ public class Module : IModule, IHasConfiguration
 
         serviceCollection.AddTransient<CreateQuoteRequestEventHandler>();
         serviceCollection.AddTransient<SubmitQuoteRequestEventHandler>();
+        serviceCollection.AddTransient<ChangeStatusQuoteRequestEventHandler>();
         serviceCollection.AddTransient<StateMachineTriggerEventHandler>();
 
         serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
@@ -86,6 +87,7 @@ public class Module : IModule, IHasConfiguration
 
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, CreateQuoteRequestEventHandler>();
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteRequestEventHandler>();
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, ChangeStatusQuoteRequestEventHandler>();
         appBuilder.RegisterEventHandler<StateMachineTriggerEvent, StateMachineTriggerEventHandler>();
 
         // Register condition trees expressions into the AbstractFactory<IConditionTree>

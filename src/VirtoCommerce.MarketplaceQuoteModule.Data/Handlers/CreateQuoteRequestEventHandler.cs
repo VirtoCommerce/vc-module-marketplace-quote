@@ -26,8 +26,7 @@ public class CreateQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
         var addedQuoteRequests = message.ChangedEntries.Where(x => x.EntryState == Platform.Core.Common.EntryState.Added).ToList();
         foreach (var quoteRequest in addedQuoteRequests)
         {
-            if (quoteRequest.NewEntry.Status != quoteRequest.OldEntry.Status
-                && quoteRequest.NewEntry.Status == QuoteStatus.Draft)
+            if (quoteRequest.NewEntry.Status == QuoteStatus.Draft)
             {
                 var existedStateMachineInstance = await _stateMachineInstanceService.GetForEntity(quoteRequest.NewEntry.Id, StateMachineObjectType.QuoteRequest);
                 if (existedStateMachineInstance == null)
@@ -35,7 +34,7 @@ public class CreateQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
                     var quoteRequestStateMachineDefinition = await _stateMachineDefinitionService.GetActiveStateMachineDefinitionAsync(StateMachineObjectType.QuoteRequest);
                     if (quoteRequestStateMachineDefinition != null)
                     {
-                        var stateMachineInstance = await _stateMachineInstanceService.CreateStateMachineInstanceAsync(quoteRequestStateMachineDefinition.Id, null, quoteRequest.NewEntry);
+                        _ = await _stateMachineInstanceService.CreateStateMachineInstanceAsync(quoteRequestStateMachineDefinition.Id, null, quoteRequest.NewEntry);
                     }
                 }
             }
