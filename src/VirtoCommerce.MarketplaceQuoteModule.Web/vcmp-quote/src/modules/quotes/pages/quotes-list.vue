@@ -336,6 +336,7 @@ onMounted(async () => {
 
 defineExpose({
   reload,
+  onItemClick,
   title,
   openDetailsBlade,
 });

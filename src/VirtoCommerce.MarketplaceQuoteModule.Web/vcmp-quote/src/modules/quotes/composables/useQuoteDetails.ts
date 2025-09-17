@@ -15,6 +15,7 @@ import {
 } from "../../../api_client/virtocommerce.marketplacequote";
 import moment from "moment";
 import { useI18n } from "vue-i18n";
+import { useTimeoutFn } from '@vueuse/core'
 
 export interface IShippingInfo {
   label: string;
@@ -149,8 +150,10 @@ export function useQuoteDetails(): IUseQuoteDetails {
                 entityId: sm.entityId!
               }));
 
-              onParentCall({ method: "reload" });
-              onParentCall({ method: "onItemClick", args: currentValue.value });
+              useTimeoutFn(() => {
+                onParentCall({ method: "reload" });
+                onParentCall({ method: "onItemClick", args: currentValue.value });
+              }, 500)
 
               refreshToolbar(currentStateMachine);
             } catch (error) {

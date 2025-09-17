@@ -1,6 +1,6 @@
 {
   "name": "@vcmp-quote/modules",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "main": "./dist/index.mjs",
   "types": "./dist/types/index.d.ts"
