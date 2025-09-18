@@ -44,63 +44,11 @@
                   orientation="horizontal"
                 >
                 </VcField>
-
+                <!-- </div> -->
+                <!-- </VcCard> -->
                 <hr class="tw-my-4" />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SUBTOTAL_PLACED')"
-                  :model-value="quoteSubTotalPlaced"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.ADJUSTMENT')"
-                  :model-value="quoteAdjustment"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SUBTOTAL')"
-                  :model-value="quoteSubTotal"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SHIPPING')"
-                  :model-value="quoteShipping"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.DISCOUNT')"
-                  :model-value="quoteDiscount"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.GRANDTOTAL')"
-                  :model-value="quoteGrandTotal"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.TAXES')"
-                  :model-value="quoteTaxes"
-                  orientation="horizontal"
-                />
-
-                <VcField
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.GRANDTOTAL_TAXES')"
-                  :model-value="quoteGrandTotalWithTaxes"
-                  orientation="horizontal"
-                />
-              </div>
-            </VcCard>
-          </VcCol>
-
-          <VcCol :size="6">
-            <VcCard :header="$t('QUOTES.PAGES.DETAILS.FORM.BUYER_RECIPIENT.TITLE')">
-              <div class="tw-p-4">
+                <!-- <VcCard :header="$t('QUOTES.PAGES.DETAILS.FORM.BUYER_RECIPIENT.TITLE')"> -->
+                <!-- <div class="tw-p-4"> -->
                 <div
                   v-for="(info, index) in shippingInfo"
                   :key="index"
@@ -150,6 +98,109 @@
               </div>
             </VcCard>
           </VcCol>
+
+          <VcCol :size="6">
+            <VcCard :header="$t('QUOTES.PAGES.DETAILS.FORM.TOTALS.TITLE')">
+              <div class="tw-p-4 tw-space-y-4">
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SUBTOTAL_PLACED')"
+                  :model-value="quoteSubTotalPlaced"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.ADJUSTMENT')"
+                  :model-value="quoteAdjustment"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SUBTOTAL')"
+                  :model-value="quoteSubTotal"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SHIPPING')"
+                  :model-value="quoteShipping"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.DISCOUNT')"
+                  :model-value="quoteDiscount"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.GRANDTOTAL')"
+                  :model-value="quoteGrandTotal"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.TAXES')"
+                  :model-value="quoteTaxes"
+                  orientation="horizontal"
+                />
+
+                <VcField
+                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.GRANDTOTAL_TAXES')"
+                  :model-value="quoteGrandTotalWithTaxes"
+                  orientation="horizontal"
+                />
+
+                <hr class="tw-my-4" />
+
+                <VcRow>
+                  <VcCol :size="6">
+                    <VcLabel class="tw-my-2"> {{ t("QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.TOTAL_SHIPPING") }} </VcLabel>
+                  </VcCol>
+                  <VcCol :size="6">
+                    <VcInput
+                      v-model="item.manualShippingTotal"
+                      prefix="$"
+                      type="number"
+                      :disabled="isReadOnly"
+                      @update:model-value="recalculateShippingTotals"
+                    />
+                  </VcCol>
+                </VcRow>
+                <VcRow>
+                  <VcCol :size="6">
+                    <VcLabel class="tw-my-2">
+                      {{ t("QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.RELATIVE_DISCOUNT") }}
+                    </VcLabel>
+                  </VcCol>
+                  <VcCol :size="6">
+                    <VcInput
+                      v-model="item.manualRelDiscountAmount"
+                      prefix="%"
+                      type="number"
+                      :disabled="isReadOnly"
+                      @update:model-value="recalculateDiscountTotals"
+                    />
+                  </VcCol>
+                </VcRow>
+                <VcRow>
+                  <VcCol :size="6">
+                    <VcLabel class="tw-my-2">
+                      {{ t("QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.MANUAL_SUBTOTAL") }}
+                    </VcLabel>
+                  </VcCol>
+                  <VcCol :size="6">
+                    <VcInput
+                      v-model="item.manualSubTotal"
+                      prefix="$"
+                      type="number"
+                      :disabled="isReadOnly"
+                      @update:model-value="recalculateSubTotals"
+                    />
+                  </VcCol>
+                </VcRow>
+              </div>
+            </VcCard>
+          </VcCol>
         </VcRow>
 
         <div class="tw-mt-4">
@@ -185,7 +236,6 @@ import {
   ITableColumns,
   useBladeNavigation,
   usePopup,
-  usePermissions,
   VcField,
 } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
@@ -219,7 +269,6 @@ const emit = defineEmits<Emits>();
 
 const { t } = useI18n({ useScope: "global" });
 const { showConfirmation } = usePopup();
-const { hasAccess } = usePermissions();
 const { openBlade } = useBladeNavigation();
 
 const {
@@ -229,7 +278,10 @@ const {
   loadQuote,
   saveQuote,
   shippingInfo,
-  recalculateTotals,
+  recalculateItemTotals,
+  recalculateShippingTotals,
+  recalculateDiscountTotals,
+  recalculateSubTotals,
   quoteSubTotalPlaced,
   quoteAdjustment,
   quoteSubTotal,
@@ -245,9 +297,7 @@ const {
 
 const bladeTitle = computed(() => item.value.number);
 
-const isReadOnly = computed(
-  () => item.value?.status === "Cancelled" || item.value?.status === "Completed" || !hasAccess(["quote:update"]),
-);
+const isReadOnly = computed(() => item.value?.status !== "Processing");
 
 const lineItemColumns = computed((): ITableColumns[] => [
   {
@@ -357,6 +407,9 @@ onMounted(async () => {
 
 defineExpose({
   title: bladeTitle,
-  recalculateTotals,
+  recalculateItemTotals,
+  recalculateShippingTotals,
+  recalculateDiscountTotals,
+  recalculateSubTotals,
 });
 </script>

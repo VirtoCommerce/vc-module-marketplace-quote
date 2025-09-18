@@ -90,12 +90,18 @@
             "DISCOUNT": "Discount",
             "GRANDTOTAL": "Grand total",
             "TAXES": "Taxes",
-            "GRANDTOTAL_TAXES": "Grand total (incl. taxes)"
+            "GRANDTOTAL_TAXES": "Grand total (incl. taxes)",
+            "TOTAL_SHIPPING": "Total shipping (manual)",
+            "RELATIVE_DISCOUNT": "Relative discount",
+            "MANUAL_SUBTOTAL": "Manual subtotal"
           },
           "BUYER_RECIPIENT": {
             "SOLD_TO": "Sold to",
             "SHIP_TO": "Ship to",
             "TITLE": "Buyer/recipient info"
+          },
+          "TOTALS": {
+            "TITLE": "Totals"
           },
           "ITEMS_LIST": {
             "TITLE": "Items list",

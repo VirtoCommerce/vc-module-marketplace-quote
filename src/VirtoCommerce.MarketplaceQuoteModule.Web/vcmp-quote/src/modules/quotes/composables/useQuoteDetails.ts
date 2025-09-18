@@ -41,7 +41,10 @@ export interface IUseQuoteDetails {
   loadQuote: (id: string) => Promise<void>;
   saveQuote: (details: QuoteRequest) => Promise<void>;
   shippingInfo: ComputedRef<IShippingInfo[]>;
-  recalculateTotals: (args: { quoteItem: QuoteItem }) => void;
+  recalculateItemTotals: (args: { quoteItem: QuoteItem }) => void;
+  recalculateShippingTotals: () => void;
+  recalculateDiscountTotals: () => void;
+  recalculateSubTotals: () => void;
   quoteSubTotalPlaced: ComputedRef<string | 0 | undefined>;
   quoteAdjustment: ComputedRef<string | 0 | undefined>;
   quoteSubTotal: ComputedRef<string | 0 | undefined>;
@@ -109,7 +112,7 @@ export function useQuoteDetails(): IUseQuoteDetails {
     resetModificationState();
   });
 
-  const recalculateTotals = async (args: { quoteItem: QuoteItem }) => {
+  const recalculateItemTotals = async (args: { quoteItem: QuoteItem }) => {
     const quoteItem = args.quoteItem;
     if (quoteItem) {
       quoteItem.selectedTierPrice = quoteItem.proposalPrices?.find((x) => x.quantity! <= quoteItem.quantity!);
@@ -127,6 +130,20 @@ export function useQuoteDetails(): IUseQuoteDetails {
       });
     }
   };
+
+  const recalculateShippingTotals = async() =>{
+    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+  }
+
+  const recalculateDiscountTotals = async() =>{
+    currentValue.value.manualSubTotal = undefined;
+    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+  }
+
+  const recalculateSubTotals = async() =>{
+    currentValue.value.manualRelDiscountAmount = undefined;
+    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+  }
 
   const refreshToolbar = (sm: StateMachineInstance) => {
     toolbar.value.splice(0);
@@ -243,7 +260,10 @@ export function useQuoteDetails(): IUseQuoteDetails {
     loadQuote,
     saveQuote,
     shippingInfo,
-    recalculateTotals,
+    recalculateItemTotals,
+    recalculateShippingTotals,
+    recalculateDiscountTotals,
+    recalculateSubTotals,
     quoteSubTotalPlaced,
     quoteAdjustment,
     quoteSubTotal,

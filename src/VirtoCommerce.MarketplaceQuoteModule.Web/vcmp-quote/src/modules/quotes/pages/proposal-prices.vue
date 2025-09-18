@@ -137,7 +137,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     async clickHandler() {
       if (item.value) {
         emit("parent:call", {
-          method: "recalculateTotals",
+          method: "recalculateItemTotals",
           args: { quoteItem: item.value },
         });
       }
