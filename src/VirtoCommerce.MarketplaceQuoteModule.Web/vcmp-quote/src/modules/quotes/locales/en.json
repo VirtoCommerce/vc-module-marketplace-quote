@@ -93,7 +93,11 @@
             "GRANDTOTAL_TAXES": "Grand total (incl. taxes)",
             "TOTAL_SHIPPING": "Total shipping (manual)",
             "RELATIVE_DISCOUNT": "Relative discount",
-            "MANUAL_SUBTOTAL": "Manual subtotal"
+            "MANUAL_SUBTOTAL": "Manual subtotal",
+            "SHIPMENT_METHOD":{
+              "TITLE": "Shipping method",
+              "TOOLTIP": "Select shipping method"
+            }
           },
           "BUYER_RECIPIENT": {
             "SOLD_TO": "Sold to",

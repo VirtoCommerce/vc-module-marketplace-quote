@@ -12,7 +12,11 @@ import {
   QuoteItem,
   QuoteAddressAddressType,
   QuoteAddress,
+  ShipmentMethod,
 } from "../../../api_client/virtocommerce.marketplacequote";
+import {
+  QuoteModuleClient,
+} from "../../../api_client/virtocommerce.quote";
 import moment from "moment";
 import { useI18n } from "vue-i18n";
 import { useTimeoutFn } from '@vueuse/core'
@@ -55,6 +59,7 @@ export interface IUseQuoteDetails {
   quoteGrandTotalWithTaxes: ComputedRef<string | 0 | undefined>;
   createdDate: ComputedRef<string>;
   resetModificationState: () => void;
+  shippingMethodOptions: Ref<ShipmentMethod[]>;
   toolbar: Ref<IBladeToolbar[]>;
 }
 
@@ -63,6 +68,8 @@ const ENTITY_TYPE = "VirtoCommerce.QuoteModule.Core.Models.QuoteRequest";
 export function useQuoteDetails(): IUseQuoteDetails {
   const { getApiClient } = useApiClient(VcmpQuoteClient);
   const { getApiClient: getStateMachineApiClient } = useApiClient(StateMachineClient);
+  const { getApiClient: getQuoteModuleApiClient } = useApiClient(QuoteModuleClient);
+
   const { t } = useI18n({ useScope: "global" });
   const toolbar = ref([]) as Ref<IBladeToolbar[]>;
   const stateMachineInstance = ref<StateMachineInstance>();
@@ -72,6 +79,10 @@ export function useQuoteDetails(): IUseQuoteDetails {
   const locale = window.navigator.language;
 
   const item = ref<QuoteRequest>(new QuoteRequest());
+
+  const shippingMethodOptions = ref(
+    [new ShipmentMethod()]
+  );
 
   const { currentValue, isModified, resetModificationState } = useModificationTracker<QuoteRequestWithTotal>(item);
 
@@ -97,6 +108,9 @@ export function useQuoteDetails(): IUseQuoteDetails {
       refreshToolbar(stateMachineInstance.value ?? {});
 
     currentValue.value = result;
+
+    var shipmentMethods = await (await getQuoteModuleApiClient()).getShipmentMethods(currentValue.value.id!);
+    shippingMethodOptions.value = shipmentMethods ?? [];
 
     resetModificationState();
   });
@@ -132,17 +146,17 @@ export function useQuoteDetails(): IUseQuoteDetails {
   };
 
   const recalculateShippingTotals = async() =>{
-    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
   }
 
   const recalculateDiscountTotals = async() =>{
     currentValue.value.manualSubTotal = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
   }
 
   const recalculateSubTotals = async() =>{
     currentValue.value.manualRelDiscountAmount = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals(currentValue.value);
+    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
   }
 
   const refreshToolbar = (sm: StateMachineInstance) => {
@@ -274,6 +288,7 @@ export function useQuoteDetails(): IUseQuoteDetails {
     quoteGrandTotalWithTaxes,
     createdDate,
     resetModificationState,
+    shippingMethodOptions,
     toolbar
   };
 }

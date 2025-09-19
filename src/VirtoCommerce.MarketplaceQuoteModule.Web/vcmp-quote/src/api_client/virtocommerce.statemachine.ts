@@ -1403,6 +1403,7 @@ export interface IGetStateMachineInstanceForEntityQuery {
 
 export class IConditionTree implements IIConditionTree {
     readonly id?: string | undefined;
+    /** List of all available children for current tree node (is used in expression designer) */
     readonly availableChildren?: IConditionTree[] | undefined;
     readonly children?: IConditionTree[] | undefined;
 
@@ -1457,6 +1458,7 @@ export class IConditionTree implements IIConditionTree {
 
 export interface IIConditionTree {
     id?: string | undefined;
+    /** List of all available children for current tree node (is used in expression designer) */
     availableChildren?: IConditionTree[] | undefined;
     children?: IConditionTree[] | undefined;
 }

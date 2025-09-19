@@ -310,11 +310,16 @@ export class Asset implements IAsset {
     url?: string | undefined;
     description?: string | undefined;
     sortOrder?: number;
+    /** Gets or sets the asset type identifier. */
     typeId?: string | undefined;
+    /** Gets or sets the asset group name. */
     group?: string | undefined;
+    /** Gets or sets the asset name. */
     name?: string | undefined;
     outerId?: string | undefined;
+    /** Gets or sets the asset language. */
     languageCode?: string | undefined;
+    /** System flag used to mark that object was inherited from other */
     readonly isInherited?: boolean;
     readonly seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
@@ -410,11 +415,16 @@ export interface IAsset {
     url?: string | undefined;
     description?: string | undefined;
     sortOrder?: number;
+    /** Gets or sets the asset type identifier. */
     typeId?: string | undefined;
+    /** Gets or sets the asset group name. */
     group?: string | undefined;
+    /** Gets or sets the asset name. */
     name?: string | undefined;
     outerId?: string | undefined;
+    /** Gets or sets the asset language. */
     languageCode?: string | undefined;
+    /** System flag used to mark that object was inherited from other */
     isInherited?: boolean;
     seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
@@ -426,58 +436,99 @@ export interface IAsset {
 }
 
 export class CatalogProduct implements ICatalogProduct {
+    /** The type of product. Can be "Physical", "Digital", etc. */
     productType?: string | undefined;
+    /** The Stock Keeping Unit (SKU) code for the product. */
     code?: string | undefined;
+    /** A manufacturer part number (MPN) is a unique alphanumeric code assigned by a manufacturer to identify a specific product or component. It is used primarily for part tracking in inventory management, supply chain operations, and ordering purposes. */
     manufacturerPartNumber?: string | undefined;
+    /** The Global Trade Item Number (GTIN) for the product. This can include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books). */
     gtin?: string | undefined;
+    /** The name of the product. */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** The ID of the catalog to which this product belongs. */
     catalogId?: string | undefined;
+    /** The ID of the category to which this product belongs. */
     categoryId?: string | undefined;
+    /** Product outline in physical catalog (all parent categories ids concatenated. E.g. (1/21/344)) */
     readonly outline?: string | undefined;
+    /** Product path in physical catalog (all parent categories names concatenated. E.g. (parent1/parent2)) */
     readonly path?: string | undefined;
     readonly titularItemId?: string | undefined;
+    /** The ID of the main product associated with this product variation. */
     mainProductId?: string | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently sold out. */
     isActive?: boolean | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently ouf of stock. */
     isBuyable?: boolean | undefined;
+    /** Indicates whether the inventory service is tracking the availability of this product.
+If set to false, the product is considered in stock without any inventory limitations. */
     trackInventory?: boolean | undefined;
+    /** The date and time when the product was last indexed for search. */
     indexingDate?: Date | undefined;
+    /** The maximum quantity of the product that can be purchased in a single order. A value of 0 indicates that there are no limitations on the maximum quantity. */
     maxQuantity?: number | undefined;
+    /** The minimum quantity of the product that must be purchased in a single order. A value of 0 indicates that there are no limitations on the minimum quantity. */
     minQuantity?: number | undefined;
+    /** Defines the number of items in a package. Quantity step for your product's. Default value is 1. */
     packSize?: number;
+    /** First listed date and time. If you do not specify an end date, the product will be active until you deactivate it.If you do not specify an end date, the product will be active until you deactivate it.If you do not specify a start date, the product will become active immediately once you save it. */
     startDate?: Date;
+    /** Listing expires on the specific date and time. If you do not specify an end date, the product will be active until you deactivate it. */
     endDate?: Date | undefined;
+    /** The type of package for this product, which determines the product's specific dimensions. */
     packageType?: string | undefined;
+    /** The unit of measurement for the product's weight. */
     weightUnit?: string | undefined;
+    /** The weight of the product, in the unit specified by the WeightUnit property. */
     weight?: number | undefined;
+    /** The unit of measurement for the product's height, length, and width. */
     measureUnit?: string | undefined;
+    /** The height of the product, in the unit specified by the MeasureUnit property. */
     height?: number | undefined;
+    /** The length of the product, in the unit specified by the MeasureUnit property. */
     length?: number | undefined;
+    /** The width of the product, in the unit specified by the MeasureUnit property. */
     width?: number | undefined;
     enableReview?: boolean | undefined;
+    /** The maximum number of times the product can be downloaded. A value of 0 indicates no limit. */
     maxNumberOfDownload?: number | undefined;
+    /** The date and time when the download link or access to the product will expire. */
     downloadExpiration?: Date | undefined;
+    /** The type of product download. Valid values include: "Standard Product", "Software", and "Music". */
     downloadType?: string | undefined;
+    /** Indicates whether the product requires the user to agree to any terms or conditions before downloading. */
     hasUserAgreement?: boolean | undefined;
+    /** Specifies the type of shipping option available for the product. */
     shippingType?: string | undefined;
+    /** Specifies the type of tax applied to the product. */
     taxType?: string | undefined;
+    /** ID of the vendor associated with the product. */
     vendor?: string | undefined;
+    /** Indicates the position of the product in the catalog for ordering purposes. */
     priority?: number;
+    /** An external identifier for the product that can be used for integration with external systems. */
     outerId?: string | undefined;
     properties?: Property[] | undefined;
     excludedProperties?: ExcludedProperty[] | undefined;
     propertyValues?: PropertyValue[] | undefined;
+    /** Gets the default image for the product. */
     readonly imgSrc?: string | undefined;
     images?: Image[] | undefined;
     assets?: Asset[] | undefined;
     links?: CategoryLink[] | undefined;
     variations?: Variation[] | undefined;
+    /** Each descendant type should override this property to use other object type for seo records */
     readonly seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
     reviews?: EditorialReview[] | undefined;
     associations?: ProductAssociation[] | undefined;
     referencedAssociations?: ProductAssociation[] | undefined;
     outlines?: Outline[] | undefined;
+    /** System flag used to mark that object was inherited from other */
     readonly isInherited?: boolean;
     readonly parentCategoryIsActive?: boolean;
     relevanceScore?: number | undefined;
@@ -731,58 +782,99 @@ export class CatalogProduct implements ICatalogProduct {
 }
 
 export interface ICatalogProduct {
+    /** The type of product. Can be "Physical", "Digital", etc. */
     productType?: string | undefined;
+    /** The Stock Keeping Unit (SKU) code for the product. */
     code?: string | undefined;
+    /** A manufacturer part number (MPN) is a unique alphanumeric code assigned by a manufacturer to identify a specific product or component. It is used primarily for part tracking in inventory management, supply chain operations, and ordering purposes. */
     manufacturerPartNumber?: string | undefined;
+    /** The Global Trade Item Number (GTIN) for the product. This can include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books). */
     gtin?: string | undefined;
+    /** The name of the product. */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** The ID of the catalog to which this product belongs. */
     catalogId?: string | undefined;
+    /** The ID of the category to which this product belongs. */
     categoryId?: string | undefined;
+    /** Product outline in physical catalog (all parent categories ids concatenated. E.g. (1/21/344)) */
     outline?: string | undefined;
+    /** Product path in physical catalog (all parent categories names concatenated. E.g. (parent1/parent2)) */
     path?: string | undefined;
     titularItemId?: string | undefined;
+    /** The ID of the main product associated with this product variation. */
     mainProductId?: string | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently sold out. */
     isActive?: boolean | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently ouf of stock. */
     isBuyable?: boolean | undefined;
+    /** Indicates whether the inventory service is tracking the availability of this product.
+If set to false, the product is considered in stock without any inventory limitations. */
     trackInventory?: boolean | undefined;
+    /** The date and time when the product was last indexed for search. */
     indexingDate?: Date | undefined;
+    /** The maximum quantity of the product that can be purchased in a single order. A value of 0 indicates that there are no limitations on the maximum quantity. */
     maxQuantity?: number | undefined;
+    /** The minimum quantity of the product that must be purchased in a single order. A value of 0 indicates that there are no limitations on the minimum quantity. */
     minQuantity?: number | undefined;
+    /** Defines the number of items in a package. Quantity step for your product's. Default value is 1. */
     packSize?: number;
+    /** First listed date and time. If you do not specify an end date, the product will be active until you deactivate it.If you do not specify an end date, the product will be active until you deactivate it.If you do not specify a start date, the product will become active immediately once you save it. */
     startDate?: Date;
+    /** Listing expires on the specific date and time. If you do not specify an end date, the product will be active until you deactivate it. */
     endDate?: Date | undefined;
+    /** The type of package for this product, which determines the product's specific dimensions. */
     packageType?: string | undefined;
+    /** The unit of measurement for the product's weight. */
     weightUnit?: string | undefined;
+    /** The weight of the product, in the unit specified by the WeightUnit property. */
     weight?: number | undefined;
+    /** The unit of measurement for the product's height, length, and width. */
     measureUnit?: string | undefined;
+    /** The height of the product, in the unit specified by the MeasureUnit property. */
     height?: number | undefined;
+    /** The length of the product, in the unit specified by the MeasureUnit property. */
     length?: number | undefined;
+    /** The width of the product, in the unit specified by the MeasureUnit property. */
     width?: number | undefined;
     enableReview?: boolean | undefined;
+    /** The maximum number of times the product can be downloaded. A value of 0 indicates no limit. */
     maxNumberOfDownload?: number | undefined;
+    /** The date and time when the download link or access to the product will expire. */
     downloadExpiration?: Date | undefined;
+    /** The type of product download. Valid values include: "Standard Product", "Software", and "Music". */
     downloadType?: string | undefined;
+    /** Indicates whether the product requires the user to agree to any terms or conditions before downloading. */
     hasUserAgreement?: boolean | undefined;
+    /** Specifies the type of shipping option available for the product. */
     shippingType?: string | undefined;
+    /** Specifies the type of tax applied to the product. */
     taxType?: string | undefined;
+    /** ID of the vendor associated with the product. */
     vendor?: string | undefined;
+    /** Indicates the position of the product in the catalog for ordering purposes. */
     priority?: number;
+    /** An external identifier for the product that can be used for integration with external systems. */
     outerId?: string | undefined;
     properties?: Property[] | undefined;
     excludedProperties?: ExcludedProperty[] | undefined;
     propertyValues?: PropertyValue[] | undefined;
+    /** Gets the default image for the product. */
     imgSrc?: string | undefined;
     images?: Image[] | undefined;
     assets?: Asset[] | undefined;
     links?: CategoryLink[] | undefined;
     variations?: Variation[] | undefined;
+    /** Each descendant type should override this property to use other object type for seo records */
     seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
     reviews?: EditorialReview[] | undefined;
     associations?: ProductAssociation[] | undefined;
     referencedAssociations?: ProductAssociation[] | undefined;
     outlines?: Outline[] | undefined;
+    /** System flag used to mark that object was inherited from other */
     isInherited?: boolean;
     parentCategoryIsActive?: boolean;
     relevanceScore?: number | undefined;
@@ -794,14 +886,20 @@ export interface ICatalogProduct {
 }
 
 export class CategoryLink implements ICategoryLink {
+    /** Entry identifier which this link belongs to */
     readonly entryId?: string | undefined;
     listEntryId?: string | undefined;
+    /** Gets or sets the type of the list entry. E.g. "product", "category" */
     listEntryType?: string | undefined;
+    /** Product order position in virtual catalog */
     priority?: number;
     catalogId?: string | undefined;
     categoryId?: string | undefined;
+    /** Gets the Id of either target Catetory or Catalog */
     readonly targetId?: string | undefined;
+    /** Gets the name of either target Catetory or Catalog */
     readonly name?: string | undefined;
+    isAutomatic?: boolean;
 
     constructor(data?: ICategoryLink) {
         if (data) {
@@ -822,6 +920,7 @@ export class CategoryLink implements ICategoryLink {
             this.categoryId = _data["categoryId"];
             (<any>this).targetId = _data["targetId"];
             (<any>this).name = _data["name"];
+            this.isAutomatic = _data["isAutomatic"];
         }
     }
 
@@ -842,19 +941,26 @@ export class CategoryLink implements ICategoryLink {
         data["categoryId"] = this.categoryId;
         data["targetId"] = this.targetId;
         data["name"] = this.name;
+        data["isAutomatic"] = this.isAutomatic;
         return data;
     }
 }
 
 export interface ICategoryLink {
+    /** Entry identifier which this link belongs to */
     entryId?: string | undefined;
     listEntryId?: string | undefined;
+    /** Gets or sets the type of the list entry. E.g. "product", "category" */
     listEntryType?: string | undefined;
+    /** Product order position in virtual catalog */
     priority?: number;
     catalogId?: string | undefined;
     categoryId?: string | undefined;
+    /** Gets the Id of either target Catetory or Catalog */
     targetId?: string | undefined;
+    /** Gets the name of either target Catetory or Catalog */
     name?: string | undefined;
+    isAutomatic?: boolean;
 }
 
 export class DynamicObjectProperty implements IDynamicObjectProperty {
@@ -1207,6 +1313,7 @@ export interface IExcludedProperty {
 
 export class IConditionTree implements IIConditionTree {
     readonly id?: string | undefined;
+    /** List of all available children for current tree node (is used in expression designer) */
     readonly availableChildren?: IConditionTree[] | undefined;
     readonly children?: IConditionTree[] | undefined;
 
@@ -1261,6 +1368,7 @@ export class IConditionTree implements IIConditionTree {
 
 export interface IIConditionTree {
     id?: string | undefined;
+    /** List of all available children for current tree node (is used in expression designer) */
     availableChildren?: IConditionTree[] | undefined;
     children?: IConditionTree[] | undefined;
 }
@@ -1272,11 +1380,16 @@ export class Image implements IImage {
     url?: string | undefined;
     description?: string | undefined;
     sortOrder?: number;
+    /** Gets or sets the asset type identifier. */
     typeId?: string | undefined;
+    /** Gets or sets the asset group name. */
     group?: string | undefined;
+    /** Gets or sets the asset name. */
     name?: string | undefined;
     outerId?: string | undefined;
+    /** Gets or sets the asset language. */
     languageCode?: string | undefined;
+    /** System flag used to mark that object was inherited from other */
     readonly isInherited?: boolean;
     readonly seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
@@ -1366,11 +1479,16 @@ export interface IImage {
     url?: string | undefined;
     description?: string | undefined;
     sortOrder?: number;
+    /** Gets or sets the asset type identifier. */
     typeId?: string | undefined;
+    /** Gets or sets the asset group name. */
     group?: string | undefined;
+    /** Gets or sets the asset name. */
     name?: string | undefined;
     outerId?: string | undefined;
+    /** Gets or sets the asset language. */
     languageCode?: string | undefined;
+    /** System flag used to mark that object was inherited from other */
     isInherited?: boolean;
     seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
@@ -1497,7 +1615,9 @@ export interface IOperationLog {
     id?: string | undefined;
 }
 
+/** Represents the path from the catalog to one of the child objects (product or category): catalog/parent-category1/.../parent-categoryN/object */
 export class Outline implements IOutline {
+    /** Outline parts */
     items?: OutlineItem[] | undefined;
 
     constructor(data?: IOutline) {
@@ -1537,16 +1657,24 @@ export class Outline implements IOutline {
     }
 }
 
+/** Represents the path from the catalog to one of the child objects (product or category): catalog/parent-category1/.../parent-categoryN/object */
 export interface IOutline {
+    /** Outline parts */
     items?: OutlineItem[] | undefined;
 }
 
+/** Represents one outline element: catalog, category or product. */
 export class OutlineItem implements IOutlineItem {
+    /** Object id */
     id?: string | undefined;
+    /** Object type */
     seoObjectType?: string | undefined;
+    /** All SEO records for the object */
     seoInfos?: SeoInfo[] | undefined;
+    /** The name of current item */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** True when this object is linked to the virtual parent. */
     hasVirtualParent?: boolean;
 
     constructor(data?: IOutlineItem) {
@@ -1596,24 +1724,37 @@ export class OutlineItem implements IOutlineItem {
     }
 }
 
+/** Represents one outline element: catalog, category or product. */
 export interface IOutlineItem {
+    /** Object id */
     id?: string | undefined;
+    /** Object type */
     seoObjectType?: string | undefined;
+    /** All SEO records for the object */
     seoInfos?: SeoInfo[] | undefined;
+    /** The name of current item */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** True when this object is linked to the virtual parent. */
     hasVirtualParent?: boolean;
 }
 
 export class ProductAssociation implements IProductAssociation {
+    /** Association type (Accessories, Up-Sales, Cross-Sales, Related etc) */
     type?: string | undefined;
     priority?: number;
     quantity?: number | undefined;
+    /** Is a primary key of associating object */
     itemId?: string | undefined;
+    /** Each link element can have an associated object like Product, Category, etc.
+Is a primary key of associated object */
     associatedObjectId?: string | undefined;
+    /** Associated object type : 'product', 'category' etc */
     associatedObjectType?: string | undefined;
     outerId?: string | undefined;
+    /** Display name for associated object */
     readonly associatedObjectName?: string | undefined;
+    /** Associated object image URL */
     readonly associatedObjectImg?: string | undefined;
     tags?: string[] | undefined;
     readonly imgSrc?: string | undefined;
@@ -1690,14 +1831,21 @@ export class ProductAssociation implements IProductAssociation {
 }
 
 export interface IProductAssociation {
+    /** Association type (Accessories, Up-Sales, Cross-Sales, Related etc) */
     type?: string | undefined;
     priority?: number;
     quantity?: number | undefined;
+    /** Is a primary key of associating object */
     itemId?: string | undefined;
+    /** Each link element can have an associated object like Product, Category, etc.
+Is a primary key of associated object */
     associatedObjectId?: string | undefined;
+    /** Associated object type : 'product', 'category' etc */
     associatedObjectType?: string | undefined;
     outerId?: string | undefined;
+    /** Display name for associated object */
     associatedObjectName?: string | undefined;
+    /** Associated object image URL */
     associatedObjectImg?: string | undefined;
     tags?: string[] | undefined;
     imgSrc?: string | undefined;
@@ -1706,10 +1854,15 @@ export interface IProductAssociation {
 }
 
 export class Property implements IProperty {
+    /** Gets or sets a value indicating whether user can change property value. */
     isReadOnly?: boolean;
+    /** Gets or sets a value indicating whether user can change property metadata or remove this property. */
     readonly isManageable?: boolean;
+    /** Gets or sets a value indicating whether this instance is new. A new property should be created on server site instead of trying to update it. */
     isNew?: boolean;
+    /** Gets or sets the catalog id that this product belongs to. */
     catalogId?: string | undefined;
+    /** Gets or sets the category id that this product belongs to. */
     categoryId?: string | undefined;
     propertyGroupId?: string | undefined;
     name?: string | undefined;
@@ -1717,6 +1870,7 @@ export class Property implements IProperty {
     dictionary?: boolean;
     multivalue?: boolean;
     multilanguage?: boolean;
+    /** Gets or sets a value indicating whether this VirtoCommerce.CatalogModule.Core.Model.Property is hidden. */
     hidden?: boolean;
     valueType?: PropertyValueType2;
     type?: PropertyType2;
@@ -1728,6 +1882,7 @@ export class Property implements IProperty {
     attributes?: PropertyAttribute[] | undefined;
     displayNames?: PropertyDisplayName[] | undefined;
     validationRules?: PropertyValidationRule[] | undefined;
+    /** Represents property validation rules definition */
     readonly validationRule?: PropertyValidationRule | undefined;
     isInherited?: boolean;
     createdDate?: Date;
@@ -1854,10 +2009,15 @@ export class Property implements IProperty {
 }
 
 export interface IProperty {
+    /** Gets or sets a value indicating whether user can change property value. */
     isReadOnly?: boolean;
+    /** Gets or sets a value indicating whether user can change property metadata or remove this property. */
     isManageable?: boolean;
+    /** Gets or sets a value indicating whether this instance is new. A new property should be created on server site instead of trying to update it. */
     isNew?: boolean;
+    /** Gets or sets the catalog id that this product belongs to. */
     catalogId?: string | undefined;
+    /** Gets or sets the category id that this product belongs to. */
     categoryId?: string | undefined;
     propertyGroupId?: string | undefined;
     name?: string | undefined;
@@ -1865,6 +2025,7 @@ export interface IProperty {
     dictionary?: boolean;
     multivalue?: boolean;
     multilanguage?: boolean;
+    /** Gets or sets a value indicating whether this VirtoCommerce.CatalogModule.Core.Model.Property is hidden. */
     hidden?: boolean;
     valueType?: PropertyValueType2;
     type?: PropertyType2;
@@ -1876,6 +2037,7 @@ export interface IProperty {
     attributes?: PropertyAttribute[] | undefined;
     displayNames?: PropertyDisplayName[] | undefined;
     validationRules?: PropertyValidationRule[] | undefined;
+    /** Represents property validation rules definition */
     validationRule?: PropertyValidationRule | undefined;
     isInherited?: boolean;
     createdDate?: Date;
@@ -1996,10 +2158,15 @@ export enum PropertyType {
     Catalog = "Catalog",
 }
 
+/** Represents property validation rules definition */
 export class PropertyValidationRule implements IPropertyValidationRule {
+    /** Uniquie value flag constrain */
     isUnique?: boolean;
+    /** Down chars count border or null if no defined */
     charCountMin?: number | undefined;
+    /** Upper chars count border or null if no defined */
     charCountMax?: number | undefined;
+    /** Custom regular expression */
     regExp?: string | undefined;
     propertyId?: string | undefined;
     id?: string | undefined;
@@ -2043,10 +2210,15 @@ export class PropertyValidationRule implements IPropertyValidationRule {
     }
 }
 
+/** Represents property validation rules definition */
 export interface IPropertyValidationRule {
+    /** Uniquie value flag constrain */
     isUnique?: boolean;
+    /** Down chars count border or null if no defined */
     charCountMin?: number | undefined;
+    /** Upper chars count border or null if no defined */
     charCountMax?: number | undefined;
+    /** Custom regular expression */
     regExp?: string | undefined;
     propertyId?: string | undefined;
     id?: string | undefined;
@@ -3518,58 +3690,99 @@ export interface ITierPrice {
 }
 
 export class Variation implements IVariation {
+    /** The type of product. Can be "Physical", "Digital", etc. */
     productType?: string | undefined;
+    /** The Stock Keeping Unit (SKU) code for the product. */
     code?: string | undefined;
+    /** A manufacturer part number (MPN) is a unique alphanumeric code assigned by a manufacturer to identify a specific product or component. It is used primarily for part tracking in inventory management, supply chain operations, and ordering purposes. */
     manufacturerPartNumber?: string | undefined;
+    /** The Global Trade Item Number (GTIN) for the product. This can include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books). */
     gtin?: string | undefined;
+    /** The name of the product. */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** The ID of the catalog to which this product belongs. */
     catalogId?: string | undefined;
+    /** The ID of the category to which this product belongs. */
     categoryId?: string | undefined;
+    /** Product outline in physical catalog (all parent categories ids concatenated. E.g. (1/21/344)) */
     readonly outline?: string | undefined;
+    /** Product path in physical catalog (all parent categories names concatenated. E.g. (parent1/parent2)) */
     readonly path?: string | undefined;
     readonly titularItemId?: string | undefined;
+    /** The ID of the main product associated with this product variation. */
     mainProductId?: string | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently sold out. */
     isActive?: boolean | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently ouf of stock. */
     isBuyable?: boolean | undefined;
+    /** Indicates whether the inventory service is tracking the availability of this product.
+If set to false, the product is considered in stock without any inventory limitations. */
     trackInventory?: boolean | undefined;
+    /** The date and time when the product was last indexed for search. */
     indexingDate?: Date | undefined;
+    /** The maximum quantity of the product that can be purchased in a single order. A value of 0 indicates that there are no limitations on the maximum quantity. */
     maxQuantity?: number | undefined;
+    /** The minimum quantity of the product that must be purchased in a single order. A value of 0 indicates that there are no limitations on the minimum quantity. */
     minQuantity?: number | undefined;
+    /** Defines the number of items in a package. Quantity step for your product's. Default value is 1. */
     packSize?: number;
+    /** First listed date and time. If you do not specify an end date, the product will be active until you deactivate it.If you do not specify an end date, the product will be active until you deactivate it.If you do not specify a start date, the product will become active immediately once you save it. */
     startDate?: Date;
+    /** Listing expires on the specific date and time. If you do not specify an end date, the product will be active until you deactivate it. */
     endDate?: Date | undefined;
+    /** The type of package for this product, which determines the product's specific dimensions. */
     packageType?: string | undefined;
+    /** The unit of measurement for the product's weight. */
     weightUnit?: string | undefined;
+    /** The weight of the product, in the unit specified by the WeightUnit property. */
     weight?: number | undefined;
+    /** The unit of measurement for the product's height, length, and width. */
     measureUnit?: string | undefined;
+    /** The height of the product, in the unit specified by the MeasureUnit property. */
     height?: number | undefined;
+    /** The length of the product, in the unit specified by the MeasureUnit property. */
     length?: number | undefined;
+    /** The width of the product, in the unit specified by the MeasureUnit property. */
     width?: number | undefined;
     enableReview?: boolean | undefined;
+    /** The maximum number of times the product can be downloaded. A value of 0 indicates no limit. */
     maxNumberOfDownload?: number | undefined;
+    /** The date and time when the download link or access to the product will expire. */
     downloadExpiration?: Date | undefined;
+    /** The type of product download. Valid values include: "Standard Product", "Software", and "Music". */
     downloadType?: string | undefined;
+    /** Indicates whether the product requires the user to agree to any terms or conditions before downloading. */
     hasUserAgreement?: boolean | undefined;
+    /** Specifies the type of shipping option available for the product. */
     shippingType?: string | undefined;
+    /** Specifies the type of tax applied to the product. */
     taxType?: string | undefined;
+    /** ID of the vendor associated with the product. */
     vendor?: string | undefined;
+    /** Indicates the position of the product in the catalog for ordering purposes. */
     priority?: number;
+    /** An external identifier for the product that can be used for integration with external systems. */
     outerId?: string | undefined;
     properties?: Property[] | undefined;
     excludedProperties?: ExcludedProperty[] | undefined;
     propertyValues?: PropertyValue[] | undefined;
+    /** Gets the default image for the product. */
     readonly imgSrc?: string | undefined;
     images?: Image[] | undefined;
     assets?: Asset[] | undefined;
     links?: CategoryLink[] | undefined;
     variations?: Variation[] | undefined;
+    /** Each descendant type should override this property to use other object type for seo records */
     readonly seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
     reviews?: EditorialReview[] | undefined;
     associations?: ProductAssociation[] | undefined;
     referencedAssociations?: ProductAssociation[] | undefined;
     outlines?: Outline[] | undefined;
+    /** System flag used to mark that object was inherited from other */
     readonly isInherited?: boolean;
     readonly parentCategoryIsActive?: boolean;
     relevanceScore?: number | undefined;
@@ -3823,58 +4036,99 @@ export class Variation implements IVariation {
 }
 
 export interface IVariation {
+    /** The type of product. Can be "Physical", "Digital", etc. */
     productType?: string | undefined;
+    /** The Stock Keeping Unit (SKU) code for the product. */
     code?: string | undefined;
+    /** A manufacturer part number (MPN) is a unique alphanumeric code assigned by a manufacturer to identify a specific product or component. It is used primarily for part tracking in inventory management, supply chain operations, and ordering purposes. */
     manufacturerPartNumber?: string | undefined;
+    /** The Global Trade Item Number (GTIN) for the product. This can include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books). */
     gtin?: string | undefined;
+    /** The name of the product. */
     name?: string | undefined;
     localizedName?: LocalizedString | undefined;
+    /** The ID of the catalog to which this product belongs. */
     catalogId?: string | undefined;
+    /** The ID of the category to which this product belongs. */
     categoryId?: string | undefined;
+    /** Product outline in physical catalog (all parent categories ids concatenated. E.g. (1/21/344)) */
     outline?: string | undefined;
+    /** Product path in physical catalog (all parent categories names concatenated. E.g. (parent1/parent2)) */
     path?: string | undefined;
     titularItemId?: string | undefined;
+    /** The ID of the main product associated with this product variation. */
     mainProductId?: string | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently sold out. */
     isActive?: boolean | undefined;
+    /** Specifies whether the product is currently visible on the store for customers to view and purchase.
+If set to false, the product is currently ouf of stock. */
     isBuyable?: boolean | undefined;
+    /** Indicates whether the inventory service is tracking the availability of this product.
+If set to false, the product is considered in stock without any inventory limitations. */
     trackInventory?: boolean | undefined;
+    /** The date and time when the product was last indexed for search. */
     indexingDate?: Date | undefined;
+    /** The maximum quantity of the product that can be purchased in a single order. A value of 0 indicates that there are no limitations on the maximum quantity. */
     maxQuantity?: number | undefined;
+    /** The minimum quantity of the product that must be purchased in a single order. A value of 0 indicates that there are no limitations on the minimum quantity. */
     minQuantity?: number | undefined;
+    /** Defines the number of items in a package. Quantity step for your product's. Default value is 1. */
     packSize?: number;
+    /** First listed date and time. If you do not specify an end date, the product will be active until you deactivate it.If you do not specify an end date, the product will be active until you deactivate it.If you do not specify a start date, the product will become active immediately once you save it. */
     startDate?: Date;
+    /** Listing expires on the specific date and time. If you do not specify an end date, the product will be active until you deactivate it. */
     endDate?: Date | undefined;
+    /** The type of package for this product, which determines the product's specific dimensions. */
     packageType?: string | undefined;
+    /** The unit of measurement for the product's weight. */
     weightUnit?: string | undefined;
+    /** The weight of the product, in the unit specified by the WeightUnit property. */
     weight?: number | undefined;
+    /** The unit of measurement for the product's height, length, and width. */
     measureUnit?: string | undefined;
+    /** The height of the product, in the unit specified by the MeasureUnit property. */
     height?: number | undefined;
+    /** The length of the product, in the unit specified by the MeasureUnit property. */
     length?: number | undefined;
+    /** The width of the product, in the unit specified by the MeasureUnit property. */
     width?: number | undefined;
     enableReview?: boolean | undefined;
+    /** The maximum number of times the product can be downloaded. A value of 0 indicates no limit. */
     maxNumberOfDownload?: number | undefined;
+    /** The date and time when the download link or access to the product will expire. */
     downloadExpiration?: Date | undefined;
+    /** The type of product download. Valid values include: "Standard Product", "Software", and "Music". */
     downloadType?: string | undefined;
+    /** Indicates whether the product requires the user to agree to any terms or conditions before downloading. */
     hasUserAgreement?: boolean | undefined;
+    /** Specifies the type of shipping option available for the product. */
     shippingType?: string | undefined;
+    /** Specifies the type of tax applied to the product. */
     taxType?: string | undefined;
+    /** ID of the vendor associated with the product. */
     vendor?: string | undefined;
+    /** Indicates the position of the product in the catalog for ordering purposes. */
     priority?: number;
+    /** An external identifier for the product that can be used for integration with external systems. */
     outerId?: string | undefined;
     properties?: Property[] | undefined;
     excludedProperties?: ExcludedProperty[] | undefined;
     propertyValues?: PropertyValue[] | undefined;
+    /** Gets the default image for the product. */
     imgSrc?: string | undefined;
     images?: Image[] | undefined;
     assets?: Asset[] | undefined;
     links?: CategoryLink[] | undefined;
     variations?: Variation[] | undefined;
+    /** Each descendant type should override this property to use other object type for seo records */
     seoObjectType?: string | undefined;
     seoInfos?: SeoInfo[] | undefined;
     reviews?: EditorialReview[] | undefined;
     associations?: ProductAssociation[] | undefined;
     referencedAssociations?: ProductAssociation[] | undefined;
     outlines?: Outline[] | undefined;
+    /** System flag used to mark that object was inherited from other */
     isInherited?: boolean;
     parentCategoryIsActive?: boolean;
     relevanceScore?: number | undefined;

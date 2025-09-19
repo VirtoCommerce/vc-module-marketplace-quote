@@ -6,31 +6,39 @@
     "package.json"
   ],
   "exports": {
+    "./quote": {
+      "import": "./dist\\virtocommerce.quote.js",
+      "types": "./dist\\types\\virtocommerce.quote.d.ts"
+    },
+    "./virtocommerce.quote": {
+      "import": "./dist\\virtocommerce.quote.js",
+      "types": "./dist\\types\\virtocommerce.quote.d.ts"
+    },
     "./marketplacequote": {
-      "import": "./dist/virtocommerce.marketplacequote.js",
-      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
     },
     "./virtocommerce.marketplacequote": {
-      "import": "./dist/virtocommerce.marketplacequote.js",
-      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
     },
     "./statemachine": {
-      "import": "./dist/virtocommerce.statemachine.js",
-      "types": "./dist/types/virtocommerce.statemachine.d.ts"
+      "import": "./dist\\virtocommerce.statemachine.js",
+      "types": "./dist\\types\\virtocommerce.statemachine.d.ts"
     },
     "./virtocommerce.statemachine": {
-      "import": "./dist/virtocommerce.statemachine.js",
-      "types": "./dist/types/virtocommerce.statemachine.d.ts"
+      "import": "./dist\\virtocommerce.statemachine.js",
+      "types": "./dist\\types\\virtocommerce.statemachine.d.ts"
     },
     ".": {
-      "import": "./dist/virtocommerce.marketplacequote.js",
-      "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
+      "import": "./dist\\virtocommerce.marketplacequote.js",
+      "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
     }
   },
   "apiClientGenerator": {
-    "version": "1.0.1",
-    "generatedAt": "2025-09-12T08:51:35.211Z"
+    "version": "1.0.6",
+    "generatedAt": "2025-09-19T08:09:03.011Z"
   },
-  "module": "./dist/virtocommerce.marketplacequote.js",
-  "types": "./dist/types/virtocommerce.marketplacequote.d.ts"
+  "module": "./dist\\virtocommerce.marketplacequote.js",
+  "types": "./dist\\types\\virtocommerce.marketplacequote.d.ts"
 }
