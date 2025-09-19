@@ -16,6 +16,7 @@ using VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Repositories;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Services;
 using VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer;
+using VirtoCommerce.MarketplaceQuoteModule.Web.Authorization;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -95,6 +96,9 @@ public class Module : IModule, IHasConfiguration
         {
             AbstractTypeFactory<IConditionTree>.RegisterType(conditionTree.GetType());
         }
+
+        //Register module authorization
+        appBuilder.UseModuleAuthorization();
 
         // Apply migrations
         using var serviceScope = serviceProvider.CreateScope();
