@@ -152,16 +152,22 @@
 
                 <hr class="tw-my-4" />
 
-                <VcSelect
-                  v-model="item.shipmentMethod"
-                  :label="$t('QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SHIPMENT_METHOD.TITLE')"
-                  :options="shippingMethodOptions"
-                  option-value="value"
-                  option-label="shipmentMethodCode"
-                  :emit-value="false"
-                  :disabled="isReadOnly"
-                  @update:model-value="recalculateShippingTotals"
-                />
+                <VcRow>
+                  <VcCol :size="6">
+                    <VcLabel class="tw-my-2"> {{ t("QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.SHIPMENT_METHOD") }} </VcLabel>
+                  </VcCol>
+                  <VcCol :size="6">
+                    <VcSelect
+                      v-model="item.shipmentMethod"
+                      :options="shippingMethodOptions"
+                      option-value="value"
+                      option-label="shipmentMethodCode"
+                      :emit-value="false"
+                      :disabled="isReadOnly"
+                      @update:model-value="recalculateShippingTotals"
+                    />
+                  </VcCol>
+                </VcRow>
                 <VcRow>
                   <VcCol :size="6">
                     <VcLabel class="tw-my-2"> {{ t("QUOTES.PAGES.DETAILS.FORM.QUOTE_INFO.TOTAL_SHIPPING") }} </VcLabel>
