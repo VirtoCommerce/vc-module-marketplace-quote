@@ -1,5 +1,23 @@
 {
   "marketplaceQuote": {
+    "blades": {
+      "seller-quotes-list": {
+        "title": "Quotes",
+        "labels": {
+          "quote-number": "Quote #",
+          "status": "Status",
+          "items-count": "Item count",
+          "customer": "Customer",
+          "created": "Created",
+          "no-quotes": "No quotes yet"
+        }
+      }
+    },
+    "widgets": {
+      "seller-quotes": {
+        "title": "Quote requests"
+      }
+    },
     "state-machine-entity-types": {
       "quote-request": "Quote request"
     }

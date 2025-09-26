@@ -29,11 +29,13 @@ angular.module(moduleName, [])
     ])
     .run(['$http', '$compile',
         'platformWebApp.mainMenuService', '$state',
+        'platformWebApp.widgetService',
         'virtoCommerce.marketplaceQuoteModule.webApi',
         'virtoCommerce.coreModule.common.dynamicExpressionService', 
         'virtoCommerce.stateMachineModule.stateMachineTypes',
         function ($http, $compile,
             mainMenuService, $state,
+            widgetService,
             webApi,
             dynamicExpressionService,
             stateMachineTypes) {
@@ -47,6 +49,13 @@ angular.module(moduleName, [])
             //    permission: 'marketplace-quote-module:access',
             //};
             //mainMenuService.addMenuItem(menuItem);
+
+            // Vendor details: Quote requests widget
+            var sellerQuotesWidget = {
+                controller: 'virtoCommerce.marketplaceQuoteModule.sellerQuotesWidgetController',
+                template: 'Modules/$(VirtoCommerce.MarketplaceQuote)/Scripts/widgets/seller-quotes-widget.tpl.html'
+            };
+            widgetService.registerWidget(sellerQuotesWidget, 'sellerDetails');
 
             // Quote request state machine entity type registration
             stateMachineTypes.addType({

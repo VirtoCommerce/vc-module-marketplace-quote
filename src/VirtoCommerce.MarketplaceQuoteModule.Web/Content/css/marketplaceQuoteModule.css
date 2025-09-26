@@ -1,0 +1,21 @@
+/* Quote status */
+.quote-status
+{
+    background: #43b0e6;
+    border-bottom: 1px solid #dedede;
+    color: #fff;
+    margin: 0 -20px;
+    padding: 10px 20px;
+}
+
+.quote-status .status
+{
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 5px;
+}
+
+.quote-status .reason
+{
+    font-size: 12px;
+}
