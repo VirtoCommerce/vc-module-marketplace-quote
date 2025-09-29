@@ -59,7 +59,7 @@ async function onClick() {
   if (props.notification.notifyType === "QuoteRequestChangeEvent") {
     await openBlade(
       {
-        blade: resolveBladeByName("Quotes"),
+        blade: resolveBladeByName("QuotesList"),
         param: props.notification.quoteRequestId,
       },
       true,
