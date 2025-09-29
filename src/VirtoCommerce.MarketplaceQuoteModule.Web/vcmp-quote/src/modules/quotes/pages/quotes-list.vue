@@ -142,6 +142,7 @@ defineOptions({
   name: "QuotesList",
   isWorkspace: true,
   permissions: ["quote:read"],
+  notifyType: "QuoteRequestChangeEvent",
   menuItem: {
     title: "QUOTES.MENU.TITLE",
     icon: "material-request_quote",
