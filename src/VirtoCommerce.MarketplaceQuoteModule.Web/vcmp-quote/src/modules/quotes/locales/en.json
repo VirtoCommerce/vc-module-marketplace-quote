@@ -260,6 +260,11 @@
         "DELETE": "Are you sure you want to delete this shipment?",
         "CLOSE_CONFIRMATION": "You have unsaved changes. Close anyway?"
       }
+    },
+    "PUSH":{
+      "QUOTE_CREATED":{
+        "TITLE": "Quote request"
+      }
     }
   }
 }

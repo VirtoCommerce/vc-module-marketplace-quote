@@ -2229,12 +2229,14 @@ export class PropertyValue implements IPropertyValue {
     propertyId?: string | undefined;
     languageCode?: string | undefined;
     alias?: string | undefined;
+    displayOrder?: number | undefined;
     valueType?: PropertyValueValueType;
     valueId?: string | undefined;
     value?: any | undefined;
     readonly propertyMultivalue?: boolean;
     outerId?: string | undefined;
     unitOfMeasureId?: string | undefined;
+    colorCode?: string | undefined;
     isInherited?: boolean;
     createdDate?: Date;
     modifiedDate?: Date | undefined;
@@ -2257,12 +2259,14 @@ export class PropertyValue implements IPropertyValue {
             this.propertyId = _data["propertyId"];
             this.languageCode = _data["languageCode"];
             this.alias = _data["alias"];
+            this.displayOrder = _data["displayOrder"];
             this.valueType = _data["valueType"];
             this.valueId = _data["valueId"];
             this.value = _data["value"];
             (<any>this).propertyMultivalue = _data["propertyMultivalue"];
             this.outerId = _data["outerId"];
             this.unitOfMeasureId = _data["unitOfMeasureId"];
+            this.colorCode = _data["colorCode"];
             this.isInherited = _data["isInherited"];
             this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
             this.modifiedDate = _data["modifiedDate"] ? new Date(_data["modifiedDate"].toString()) : <any>undefined;
@@ -2285,12 +2289,14 @@ export class PropertyValue implements IPropertyValue {
         data["propertyId"] = this.propertyId;
         data["languageCode"] = this.languageCode;
         data["alias"] = this.alias;
+        data["displayOrder"] = this.displayOrder;
         data["valueType"] = this.valueType;
         data["valueId"] = this.valueId;
         data["value"] = this.value;
         data["propertyMultivalue"] = this.propertyMultivalue;
         data["outerId"] = this.outerId;
         data["unitOfMeasureId"] = this.unitOfMeasureId;
+        data["colorCode"] = this.colorCode;
         data["isInherited"] = this.isInherited;
         data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
         data["modifiedDate"] = this.modifiedDate ? this.modifiedDate.toISOString() : <any>undefined;
@@ -2306,12 +2312,14 @@ export interface IPropertyValue {
     propertyId?: string | undefined;
     languageCode?: string | undefined;
     alias?: string | undefined;
+    displayOrder?: number | undefined;
     valueType?: PropertyValueValueType;
     valueId?: string | undefined;
     value?: any | undefined;
     propertyMultivalue?: boolean;
     outerId?: string | undefined;
     unitOfMeasureId?: string | undefined;
+    colorCode?: string | undefined;
     isInherited?: boolean;
     createdDate?: Date;
     modifiedDate?: Date | undefined;
@@ -2330,6 +2338,7 @@ export enum PropertyValueType {
     GeoPoint = "GeoPoint",
     Html = "Html",
     Measure = "Measure",
+    Color = "Color",
 }
 
 export class QuoteAddress implements IQuoteAddress {
@@ -3411,6 +3420,7 @@ export interface ISearchQuoteRequestsQuery {
 export class SeoInfo implements ISeoInfo {
     name?: string | undefined;
     semanticUrl?: string | undefined;
+    outline?: string | undefined;
     pageTitle?: string | undefined;
     metaDescription?: string | undefined;
     imageAltDescription?: string | undefined;
@@ -3439,6 +3449,7 @@ export class SeoInfo implements ISeoInfo {
         if (_data) {
             this.name = _data["name"];
             this.semanticUrl = _data["semanticUrl"];
+            this.outline = _data["outline"];
             this.pageTitle = _data["pageTitle"];
             this.metaDescription = _data["metaDescription"];
             this.imageAltDescription = _data["imageAltDescription"];
@@ -3467,6 +3478,7 @@ export class SeoInfo implements ISeoInfo {
         data = typeof data === 'object' ? data : {};
         data["name"] = this.name;
         data["semanticUrl"] = this.semanticUrl;
+        data["outline"] = this.outline;
         data["pageTitle"] = this.pageTitle;
         data["metaDescription"] = this.metaDescription;
         data["imageAltDescription"] = this.imageAltDescription;
@@ -3488,6 +3500,7 @@ export class SeoInfo implements ISeoInfo {
 export interface ISeoInfo {
     name?: string | undefined;
     semanticUrl?: string | undefined;
+    outline?: string | undefined;
     pageTitle?: string | undefined;
     metaDescription?: string | undefined;
     imageAltDescription?: string | undefined;
@@ -4437,6 +4450,7 @@ export enum PropertyValueType2 {
     GeoPoint = "GeoPoint",
     Html = "Html",
     Measure = "Measure",
+    Color = "Color",
 }
 
 export enum PropertyType2 {
@@ -4456,6 +4470,7 @@ export enum PropertyValueValueType {
     GeoPoint = "GeoPoint",
     Html = "Html",
     Measure = "Measure",
+    Color = "Color",
 }
 
 export enum QuoteAddressAddressType {

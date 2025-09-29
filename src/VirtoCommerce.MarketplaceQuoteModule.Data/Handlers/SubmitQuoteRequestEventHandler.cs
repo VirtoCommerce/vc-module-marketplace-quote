@@ -1,7 +1,9 @@
 using System.Linq;
 using System.Threading.Tasks;
+using VirtoCommerce.MarketplaceQuoteModule.Core.PushNotifications;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.QuoteModule.Core;
 using VirtoCommerce.QuoteModule.Core.Events;
@@ -18,13 +20,15 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
     private readonly IStateMachineDefinitionService _stateMachineDefinitionService;
     private readonly IStateMachineInstanceService _stateMachineInstanceService;
     private readonly ISettingsManager _settingsManager;
+    private readonly IPushNotificationManager _pushNotifier;
 
     public SubmitQuoteRequestEventHandler(
         IQuoteRequestService quoteRequestService,
         IQuoteRequestSplitter quoteRequestSplitter,
         IStateMachineDefinitionService stateMachineDefinitionService,
         IStateMachineInstanceService stateMachineInstanceService,
-        ISettingsManager settingsManager
+        ISettingsManager settingsManager,
+        IPushNotificationManager pushNotifier
         )
     {
         _quoteRequestService = quoteRequestService;
@@ -32,6 +36,7 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
         _stateMachineDefinitionService = stateMachineDefinitionService;
         _stateMachineInstanceService = stateMachineInstanceService;
         _settingsManager = settingsManager;
+        _pushNotifier = pushNotifier;
     }
 
     public virtual async Task Handle(QuoteRequestChangeEvent message)
@@ -73,6 +78,21 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
                         }
 
                         await _quoteRequestService.SaveChangesAsync(splittedQuoteRequests);
+                    }
+
+                    foreach (var splittedQuoteRequest in splittedQuoteRequests)
+                    {
+                        if (!string.IsNullOrEmpty(splittedQuoteRequest.SellerId))
+                        {
+                            var pushNotification = new QuoteRequestSubmittedPushNotification(splittedQuoteRequest.SellerId)
+                            {
+                                NotifyType = nameof(QuoteRequestChangeEvent),
+                                QuoteRequestId = splittedQuoteRequest.Id,
+                                QuoteRequestNumber = splittedQuoteRequest.Number,
+                                Title = $"A new quote request #{splittedQuoteRequest.Number} has been created"
+                            };
+                            await _pushNotifier.SendAsync(pushNotification);
+                        }
                     }
                 }
             }
