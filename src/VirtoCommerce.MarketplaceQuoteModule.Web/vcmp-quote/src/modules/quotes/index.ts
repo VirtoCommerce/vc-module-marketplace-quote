@@ -1,6 +1,7 @@
 import { createAppModule, registerDashboardWidget } from "@vc-shell/framework";
 import * as pages from "./pages";
 import * as locales from "./locales";
+import * as notifications from "./components/notifications";
 import * as components from "./components";
 import { markRaw } from "vue";
 
@@ -12,4 +13,4 @@ registerDashboardWidget({
   size: { width: 6, height: 6 },
 });
 
-export default createAppModule(pages, locales, undefined, components);
+export default createAppModule(pages, locales, notifications, components);

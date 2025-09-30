@@ -1,6 +1,6 @@
 {
   "name": "vcmp-quote",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "private": true,
   "scripts": {
     "serve": "cross-env APP_ENV=development vite --force",

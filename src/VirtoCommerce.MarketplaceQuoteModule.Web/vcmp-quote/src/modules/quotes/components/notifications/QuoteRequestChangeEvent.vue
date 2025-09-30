@@ -55,7 +55,7 @@ const notificationStyle = computed(() => ({
   icon: "material-request_quote",
 }));
 
-async function onClick() {
+const onClick = async () => {
   if (props.notification.notifyType === "QuoteRequestChangeEvent") {
     await openBlade(
       {
@@ -69,5 +69,5 @@ async function onClick() {
       param: props.notification.quoteRequestId,
     });
   }
-}
+};
 </script>
