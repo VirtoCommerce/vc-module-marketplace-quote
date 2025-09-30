@@ -6,11 +6,6 @@
     :notification="notification"
     @click="onClick"
   >
-    <VcHint
-      class="tw-mb-1"
-      :style="{ color: variant }"
-      >{{ notificationDescription }}</VcHint
-    >
   </NotificationTemplate>
 </template>
 
@@ -43,10 +38,6 @@ const { openBlade, resolveBladeByName } = useBladeNavigation();
 const { t } = useI18n({ useScope: "global" });
 
 const notificationTitle = computed(() => {
-  return `${t("QUOTES.PUSH.QUOTE_CREATED.TITLE")} "${props.notification.quoteRequestNumber}"`;
-});
-
-const notificationDescription = computed(() => {
   return `${props.notification.title}`;
 });
 
