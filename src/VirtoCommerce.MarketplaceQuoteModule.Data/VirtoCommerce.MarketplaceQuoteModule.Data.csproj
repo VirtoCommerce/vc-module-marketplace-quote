@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.897.0" />
     <PackageReference Include="VirtoCommerce.QuoteModule.Data" Version="3.908.0" />
-    <PackageReference Include="VirtoCommerce.MarketplaceVendorModule.Data" Version="3.830.0-alpha.916" />
+    <PackageReference Include="VirtoCommerce.MarketplaceVendorModule.Data" Version="3.830.0-alpha.924" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.MarketplaceQuoteModule.Core\VirtoCommerce.MarketplaceQuoteModule.Core.csproj" />

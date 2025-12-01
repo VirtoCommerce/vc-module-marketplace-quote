@@ -7,7 +7,7 @@
   <platformVersion>3.897.0</platformVersion>
   <dependencies>
     <dependency id="VirtoCommerce.Quote" version="3.908.0" />
-    <dependency id="VirtoCommerce.MarketplaceVendor" version="3.830.0-alpha.916" />
+    <dependency id="VirtoCommerce.MarketplaceVendor" version="3.830.0-alpha.924" />
   </dependencies>
 
   <title>VirtoCommerce MarketplaceQuote</title>
