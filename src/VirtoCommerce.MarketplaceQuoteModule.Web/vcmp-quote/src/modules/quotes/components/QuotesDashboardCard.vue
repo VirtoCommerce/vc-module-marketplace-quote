@@ -9,10 +9,10 @@
       #actions
     >
       <vc-button
-        small
-        variant="secondary"
+        size="sm"
+        variant="ghost"
         @click="() => onItemClick()"
-        >{{ $t("QUOTES.WIDGET.ALL") }}</vc-button
+        >{{ $t("QUOTES.WIDGET.ALL") }} &rarr;</vc-button
       >
     </template>
     <template #content>
@@ -28,11 +28,6 @@
         @item-click="onItemClick"
       />
     </template>
-    <!-- <template #mobile-content>
-      <div class="orders-dashboard-card__mobile-content">
-        <div class="orders-dashboard-card__mobile-content-item-value">{{ pagination?.totalCount }}</div>
-      </div>
-    </template> -->
   </DashboardWidgetCard>
 </template>
 
