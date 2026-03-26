@@ -2,13 +2,8 @@
   <VcBlade
     :title="bladeTitle"
     :toolbar-items="bladeToolbar"
-    :closable="closable"
-    :expanded="expanded"
     :modified="isModified"
     width="50%"
-    @close="$emit('close:blade')"
-    @expand="$emit('expand:blade')"
-    @collapse="$emit('collapse:blade')"
   >
     <VcForm v-if="item">
       <VcContainer>
@@ -22,25 +17,35 @@
 
           <!-- Pricing Table -->
           <VcCard :header="$t('QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.PRICING')">
-            <VcTable
+            <VcDataTable
               :items="item.proposalPrices || []"
-              :columns="priceColumns"
               :total-count="item.proposalPrices?.length || 0"
-              expanded
-              :editing="!isDisabled"
+              :edit-mode="isDisabled ? undefined : 'cell'"
+              :row-actions="rowActions"
+              :add-row="addRowConfig"
               state-key="proposal-prices-table"
-              enable-item-actions
-              :header="false"
-              :footer="false"
-              :item-action-builder="itemActionBuilder"
-              :add-new-row-button="{
-                show: true,
-                title: $t('QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.ADD_PRICE'),
-              }"
-              @on-add-new-row="addPrice"
-              @on-edit-complete="onEditComplete"
+              @row-add="addPrice"
+              @cell-edit-complete="onEditComplete"
             >
-            </VcTable>
+              <VcColumn
+                id="quantity"
+                :title="t('QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.MIN_QTY')"
+                :always-visible="true"
+                type="number"
+                :editable="!isDisabled"
+                :rules="{ min_value: 1, required: true }"
+              />
+
+              <VcColumn
+                id="price"
+                :title="t('QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.PRICE')"
+                :always-visible="true"
+                type="money"
+                currency-field="currency"
+                :editable="!isDisabled"
+                :rules="{ min_value: 0, required: true }"
+              />
+            </VcDataTable>
           </VcCard>
 
           <!-- Comment Section -->
@@ -59,75 +64,47 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from "vue";
-import { IBladeToolbar, IParentCallArgs, ITableColumns, IActionBuilderResult } from "@vc-shell/framework";
+import { IBladeToolbar, useBlade } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
 import { useProposalPrices } from "../composables/useProposalPrices";
 import { QuoteItem, ITierPrice } from "../../../api_client/virtocommerce.marketplacequote";
 
-export interface Props {
-  expanded?: boolean;
-  closable?: boolean;
-  param?: string;
-  options?: {
-    item: QuoteItem;
-    disabled?: boolean;
-  };
-}
-
-export interface Emits {
-  (event: "parent:call", args: IParentCallArgs): void;
-  (event: "collapse:blade"): void;
-  (event: "expand:blade"): void;
-  (event: "close:blade"): void;
-}
-
-defineOptions({
+defineBlade({
   name: "ProposalPrices",
 });
 
-const props = withDefaults(defineProps<Props>(), {
-  expanded: true,
-  closable: true,
-});
-
-const emit = defineEmits<Emits>();
-
 const { t } = useI18n({ useScope: "global" });
+const { options, closeSelf, callParent } = useBlade<{ item: QuoteItem; disabled?: boolean }>();
 
 const { item, isModified, loadItem, addPrice, removePrice, meta } = useProposalPrices({
-  quoteItem: props.options?.item,
-  disabled: props.options?.disabled,
+  quoteItem: options.value?.item,
+  disabled: options.value?.disabled,
 });
 
-const isDisabled = computed(() => props.options?.disabled ?? false);
+const isDisabled = computed(() => options.value?.disabled ?? false);
 
 const bladeTitle = computed(() => item.value?.name || t("QUOTES.PAGES.PROPOSAL_PRICES.TITLE"));
 
-const priceColumns = computed((): ITableColumns[] => [
-  {
-    id: "quantity",
-    title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.MIN_QTY"),
-    alwaysVisible: true,
-    type: "number",
-    rules: {
-      min_value: 1,
-      required: true,
+const addRowConfig = computed(() =>
+  isDisabled.value
+    ? undefined
+    : {
+        enabled: true,
+        label: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.ADD_PRICE"),
+      },
+);
+
+const rowActions = computed(() => {
+  if (isDisabled.value) return undefined;
+  return () => [
+    {
+      icon: "material-delete",
+      title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.DELETE"),
+      variant: "danger" as const,
+      clickHandler: (_: unknown, index: number) => removePrice(index),
     },
-    editable: !isDisabled.value,
-  },
-  {
-    id: "price",
-    title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.PRICE"),
-    alwaysVisible: true,
-    type: "money",
-    currencyField: "currency",
-    rules: {
-      min_value: 0,
-      required: true,
-    },
-    editable: !isDisabled.value,
-  },
-]);
+  ];
+});
 
 const bladeToolbar = computed((): IBladeToolbar[] => [
   {
@@ -136,15 +113,11 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     icon: "material-check",
     async clickHandler() {
       if (item.value) {
-        emit("parent:call", {
-          method: "recalculateItemTotals",
-          args: { quoteItem: item.value },
-        });
+        await callParent("recalculateItemTotals", { quoteItem: item.value });
       }
-
-      emit("close:blade");
+      closeSelf();
     },
-    isVisible: !props.options?.disabled,
+    isVisible: !options.value?.disabled,
     disabled: computed(() => {
       return !(
         item.value?.proposalPrices &&
@@ -159,9 +132,9 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     title: t("QUOTES.PAGES.PROPOSAL_PRICES.TOOLBAR.CANCEL"),
     icon: "material-cancel",
     async clickHandler() {
-      emit("close:blade");
+      closeSelf();
     },
-    isVisible: !props.options?.disabled,
+    isVisible: !options.value?.disabled,
     disabled: computed(() => {
       return !(
         item.value?.proposalPrices &&
@@ -173,39 +146,15 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   },
 ]);
 
-const itemActionBuilder = (): IActionBuilderResult[] | undefined => {
-  if (props.options?.disabled) {
-    return undefined;
-  }
-  return [
-    {
-      icon: "material-delete",
-      title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.DELETE"),
-      type: "danger",
-      clickHandler: (_, index) => removePrice(index),
-    },
-  ];
-};
-
-const onEditComplete = (args: {
-  event: {
-    field: string;
-    value: string | number;
-  };
-  index: number;
-}) => {
+const onEditComplete = (args: { data: unknown; field: string; newValue: unknown; index: number }) => {
   if (item.value?.proposalPrices) {
-    item.value.proposalPrices[args.index][args.event.field as keyof ITierPrice] = args.event.value as number;
+    item.value.proposalPrices[args.index][args.field as keyof ITierPrice] = args.newValue as number;
   }
 };
 
 onMounted(() => {
-  if (props.options?.item) {
-    loadItem(props.options.item);
+  if (options.value?.item) {
+    loadItem(options.value.item);
   }
-});
-
-defineExpose({
-  title: bladeTitle,
 });
 </script>

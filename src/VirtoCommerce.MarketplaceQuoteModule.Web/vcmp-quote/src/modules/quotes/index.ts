@@ -1,7 +1,7 @@
-import { createAppModule, registerDashboardWidget } from "@vc-shell/framework";
+import { defineAppModule, registerDashboardWidget } from "@vc-shell/framework";
 import * as pages from "./pages";
 import * as locales from "./locales";
-import * as notifications from "./components/notifications";
+import { QuoteRequestChangeEvent } from "./notifications";
 import * as components from "./components";
 import { markRaw } from "vue";
 
@@ -13,4 +13,13 @@ registerDashboardWidget({
   size: { width: 6, height: 6 },
 });
 
-export default createAppModule(pages, locales, notifications, components);
+export default defineAppModule({
+  blades: pages,
+  locales,
+  notifications: {
+    QuoteRequestChangeEvent: {
+      template: QuoteRequestChangeEvent,
+      toast: { mode: "auto" },
+    },
+  },
+});

@@ -3,13 +3,8 @@
     v-loading="loading"
     :title="bladeTitle"
     :toolbar-items="bladeToolbar"
-    :closable="closable"
-    :expanded="expanded"
     :modified="isModified"
     width="70%"
-    @close="onClose"
-    @expand="$emit('expand:blade')"
-    @collapse="$emit('collapse:blade')"
   >
     <VcForm>
       <VcContainer>
@@ -44,11 +39,7 @@
                   orientation="horizontal"
                 >
                 </VcField>
-                <!-- </div> -->
-                <!-- </VcCard> -->
                 <hr class="tw-my-4" />
-                <!-- <VcCard :header="$t('QUOTES.PAGES.DETAILS.FORM.BUYER_RECIPIENT.TITLE')"> -->
-                <!-- <div class="tw-p-4"> -->
                 <div
                   v-for="(info, index) in shippingInfo"
                   :key="index"
@@ -221,22 +212,66 @@
 
         <div class="tw-mt-4">
           <VcCard :header="$t('QUOTES.PAGES.DETAILS.FORM.ITEMS_LIST.TITLE')">
-            <VcTable
+            <VcDataTable
               :items="item.items || []"
-              :columns="lineItemColumns"
-              expanded
-              :header="false"
-              :footer="false"
+              :total-count="item.items?.length || 0"
               state-key="quote-details-line-items"
-              @item-click="onItemClick"
+              @row-click="onItemClick"
             >
-              <template #item_name="{ item }">
-                <QuoteGridName
-                  :sku="item.sku"
-                  :name="item.name"
-                ></QuoteGridName>
-              </template>
-            </VcTable>
+              <VcColumn
+                id="imageUrl"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.PIC')"
+                width="60px"
+                type="image"
+                class="tw-pr-0"
+              />
+
+              <VcColumn
+                id="name"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.NAME')"
+              >
+                <template #body="{ data }">
+                  <QuoteGridName
+                    :sku="data.sku"
+                    :name="data.name"
+                  />
+                </template>
+              </VcColumn>
+
+              <VcColumn
+                id="listPrice"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.LIST_PRICE')"
+                type="money"
+                currency-field="currency"
+              />
+
+              <VcColumn
+                id="salePrice"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.SALE_PRICE')"
+                type="money"
+                currency-field="currency"
+              />
+
+              <VcColumn
+                id="proposedPrice"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.PROPOSED_PRICE')"
+                type="money"
+                currency-field="currency"
+              />
+
+              <VcColumn
+                id="quantity"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.QUANTITY')"
+                type="number"
+              />
+
+              <VcColumn
+                id="total"
+                :title="t('QUOTES.PAGES.DETAILS.FORM.TABLE.TOTAL')"
+                type="money"
+                currency-field="currency"
+              />
+            </VcDataTable>
           </VcCard>
         </div>
       </VcContainer>
@@ -246,46 +281,20 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from "vue";
-import {
-  IBladeToolbar,
-  IParentCallArgs,
-  ITableColumns,
-  useBladeNavigation,
-  usePopup,
-  VcField,
-} from "@vc-shell/framework";
+import { IBladeToolbar, useBlade, usePopup, VcField } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
 import { useQuoteDetails } from "../composables/useQuoteDetails";
 import { QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { QuoteGridName } from "../components";
-export interface Props {
-  expanded?: boolean;
-  closable?: boolean;
-  param?: string;
-}
 
-export interface Emits {
-  (event: "parent:call", args: IParentCallArgs): void;
-  (event: "collapse:blade"): void;
-  (event: "expand:blade"): void;
-  (event: "close:blade"): void;
-}
-
-defineOptions({
+defineBlade({
   url: "/quote-details",
   name: "QuoteDetails",
 });
 
-const props = withDefaults(defineProps<Props>(), {
-  expanded: true,
-  closable: true,
-});
-
-const emit = defineEmits<Emits>();
-
 const { t } = useI18n({ useScope: "global" });
 const { showConfirmation } = usePopup();
-const { openBlade } = useBladeNavigation();
+const { param, openBlade, closeSelf, callParent, onBeforeClose, exposeToChildren } = useBlade();
 
 const {
   item,
@@ -316,49 +325,6 @@ const bladeTitle = computed(() => item.value.number);
 
 const isReadOnly = computed(() => item.value?.status !== "Processing");
 
-const lineItemColumns = computed((): ITableColumns[] => [
-  {
-    id: "imageUrl",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.PIC"),
-    width: "60px",
-    class: "tw-pr-0",
-    type: "image",
-  },
-  {
-    id: "name",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.NAME"),
-  },
-  {
-    id: "listPrice",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.LIST_PRICE"),
-    type: "money",
-    currencyField: "currency",
-  },
-  {
-    id: "salePrice",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.SALE_PRICE"),
-    type: "money",
-    currencyField: "currency",
-  },
-  {
-    id: "proposedPrice",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.PROPOSED_PRICE"),
-    type: "money",
-    currencyField: "currency",
-  },
-  {
-    id: "quantity",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.QUANTITY"),
-    type: "number",
-  },
-  {
-    id: "total",
-    title: t("QUOTES.PAGES.DETAILS.FORM.TABLE.TOTAL"),
-    type: "money",
-    currencyField: "currency",
-  },
-]);
-
 const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "save",
@@ -367,17 +333,8 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     async clickHandler() {
       if (item.value) {
         await saveQuote(item.value);
-
-        emit("parent:call", {
-          method: "reload",
-        });
-
-        emit("parent:call", {
-          method: "openDetailsBlade",
-          args: {
-            param: item.value.id ?? undefined,
-          },
-        });
+        await callParent("reload");
+        await callParent("openDetailsBlade", { param: item.value.id ?? undefined });
       }
     },
     isVisible: item.value?.status == "Processing",
@@ -396,34 +353,30 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   ...toolbar.value,
 ]);
 
-async function onClose() {
+onBeforeClose(async () => {
   if (isModified.value) {
-    if (await showConfirmation(t("QUOTES.PAGES.DETAILS.CLOSE_CONFIRMATION"))) {
-      emit("close:blade");
-    }
-  } else {
-    emit("close:blade");
+    return !(await showConfirmation(t("QUOTES.PAGES.DETAILS.CLOSE_CONFIRMATION")));
   }
-}
+  return false;
+});
 
-async function onItemClick(quoteItem: QuoteItem) {
+async function onItemClick(event: { data: QuoteItem }) {
   await openBlade({
-    blade: { name: "ProposalPrices" },
+    name: "ProposalPrices",
     options: {
-      item: quoteItem,
+      item: event.data,
       disabled: item.value?.status != "Processing",
     },
   });
 }
 
 onMounted(async () => {
-  if (props.param) {
-    await loadQuote(props.param);
+  if (param.value) {
+    await loadQuote(param.value);
   }
 });
 
-defineExpose({
-  title: bladeTitle,
+exposeToChildren({
   recalculateItemTotals,
   recalculateShippingTotals,
   recalculateDiscountTotals,

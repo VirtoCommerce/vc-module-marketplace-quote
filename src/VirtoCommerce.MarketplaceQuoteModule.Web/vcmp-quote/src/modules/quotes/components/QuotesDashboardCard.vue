@@ -16,54 +16,50 @@
       >
     </template>
     <template #content>
-      <!-- @vue-generic {QuoteRequest} -->
-      <VcTable
+      <VcDataTable
         :items="items?.slice(0, 5)"
-        :columns="columns"
-        :header="false"
-        :footer="false"
-        :reorderable-columns="false"
+        :total-count="items?.slice(0, 5)?.length || 0"
         :resizable-columns="false"
+        :reorderable-columns="false"
         state-key="quotes-dashboard-card"
-        @item-click="onItemClick"
-      />
+        @row-click="onRowClick"
+      >
+        <VcColumn
+          id="lineItemsImg"
+          :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.ITEMS_IMG')"
+          width="75px"
+        />
+
+        <VcColumn
+          id="number"
+          :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.NUMBER')"
+        />
+
+        <VcColumn
+          id="customerName"
+          :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.CUSTOMER')"
+        />
+
+        <VcColumn
+          id="total"
+          :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.TOTAL')"
+          type="money"
+        />
+      </VcDataTable>
     </template>
   </DashboardWidgetCard>
 </template>
 
 <script setup lang="ts">
-import { useBladeNavigation, ITableColumns, DashboardWidgetCard } from "@vc-shell/framework";
+import { useBlade, DashboardWidgetCard } from "@vc-shell/framework";
 import { useQuotesList } from "../composables/useQuotesList";
-import { onMounted, computed } from "vue";
+import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
 
-const { openBlade, resolveBladeByName } = useBladeNavigation();
+const { openBlade } = useBlade();
 const { loadQuotes, items, loading } = useQuotesList();
-const { t } = useI18n({
-  useScope: "global",
-});
-
-const columns: ITableColumns[] = [
-  {
-    id: "lineItemsImg",
-    title: computed(() => t("QUOTES.PAGES.LIST.TABLE.HEADER.ITEMS_IMG")),
-    width: "75px",
-  },
-  {
-    id: "number",
-    title: computed(() => t("QUOTES.PAGES.LIST.TABLE.HEADER.NUMBER")),
-  },
-  {
-    id: "customerName",
-    title: computed(() => t("QUOTES.PAGES.LIST.TABLE.HEADER.CUSTOMER")),
-  },
-  {
-    id: "total",
-    title: computed(() => t("QUOTES.PAGES.LIST.TABLE.HEADER.TOTAL")),
-    type: "money",
-  },
-];
+const { t } = useI18n({ useScope: "global" });
 
 onMounted(() => {
   loadQuotes({
@@ -71,20 +67,15 @@ onMounted(() => {
   });
 });
 
+function onRowClick(event: { data: QuoteRequest }) {
+  onItemClick(event.data);
+}
+
 async function onItemClick(args?: QuoteRequest) {
-  await openBlade(
-    {
-      blade: resolveBladeByName("QuotesListNew"),
-      param: args?.id,
-    },
-    true,
-  );
+  await openBlade({ name: "QuotesList", param: args?.id });
 
   if (args?.id) {
-    await openBlade({
-      blade: resolveBladeByName("QuoteDetailsNew"),
-      param: args?.id,
-    });
+    await openBlade({ name: "QuoteDetails", param: args.id });
   }
 }
 </script>

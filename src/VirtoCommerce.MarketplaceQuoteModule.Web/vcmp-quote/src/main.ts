@@ -5,14 +5,12 @@ import * as locales from "./locales";
 import { RouterView } from "vue-router";
 import Quotes from "./modules/quotes";
 
-
 // Load required CSS
 import "@vc-shell/framework/dist/index.css";
 import { bootstrap } from "./bootstrap";
 
 async function startApp() {
   const { loadUser } = useUser();
-
 
   try {
     await loadUser();
@@ -30,7 +28,7 @@ async function startApp() {
         fallbackLocale: import.meta.env.APP_I18N_FALLBACK_LOCALE,
       },
     })
-    .use(Quotes, { router })
+    .use(Quotes)
     .use(router);
 
   Object.entries(locales).forEach(([key, message]) => {

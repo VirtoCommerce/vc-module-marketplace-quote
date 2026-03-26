@@ -1,148 +1,103 @@
 <template>
   <VcBlade
-    v-loading="loading"
+    :loading="loading"
     :title="title"
     :toolbar-items="bladeToolbar"
-    :closable="closable"
-    :expanded="expanded"
     width="30%"
-    @close="$emit('close:blade')"
-    @expand="$emit('expand:blade')"
-    @collapse="$emit('collapse:blade')"
   >
-    <VcTable
-      :total-label="$t('QUOTES.PAGES.LIST.TABLE.TOTALS')"
-      :items="items"
-      :selected-item-id="selectedItemId"
-      :search-value="searchKeyword"
-      :columns="columns"
-      :sort="sortExpression"
-      :pages="pages"
-      :current-page="currentPage"
-      :total-count="totalCount"
-      :expanded="expanded"
-      :active-filter-count="activeFilterCount"
-      column-selector="defined"
-      state-key="QUOTES"
-      :multiselect="false"
+    <VcDataTable
+      v-model:active-item-id="selectedItemId"
+      v-model:sort-field="sortField"
+      v-model:sort-order="sortOrder"
       class="tw-grow tw-basis-0"
-      @item-click="onItemClick"
-      @header-click="onHeaderClick"
+      :items="items"
+      :total-count="totalCount"
+      :total-label="$t('QUOTES.PAGES.LIST.TABLE.TOTALS')"
+      :pagination="{ currentPage, pages }"
+      :global-filters="globalFilters"
+      :show-all-columns="expanded"
+      state-key="QUOTES"
+      :searchable="true"
+      @row-click="onItemClick"
       @pagination-click="onPaginationClick"
-      @search:change="onSearchChange"
-      @selection-changed="onSelectionChanged"
+      @search="onSearchChange"
+      @filter="onFilter"
     >
-      <template #filters>
-        <div class="tw-p-4">
-          <VcRow class="tw-gap-16">
-            <div class="tw-flex tw-flex-col">
-              <!-- Status Filter -->
-              <h3 class="tw-text-sm tw-font-medium tw-mb-3">
-                {{ $t("QUOTES.PAGES.LIST.TABLE.FILTER.STATUS.TITLE") }}
-              </h3>
-              <div class="tw-space-y-2">
-                <VcRadioButton
-                  v-for="status in statuses"
-                  :key="status.value"
-                  :model-value="stagedFilters.status[0] || ''"
-                  :value="status.value"
-                  :label="status.displayValue"
-                  @update:model-value="(value) => toggleStatusFilter(value)"
-                >
-                </VcRadioButton>
-              </div>
-            </div>
+      <VcColumn
+        id="lineItemsImg"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.ITEMS_IMG')"
+        width="75px"
+        :always-visible="true"
+        type="image"
+        mobile-role="image"
+      >
+        <template #body="{ data }">
+          <QuoteLineItemsImgTemplate :items="data.items" />
+        </template>
+      </VcColumn>
 
-            <!-- Date Range Filter -->
-            <div class="tw-flex tw-flex-col">
-              <h3 class="tw-text-sm tw-font-medium tw-mb-3">
-                {{ $t("QUOTES.PAGES.LIST.TABLE.FILTER.DATE.TITLE") }}
-              </h3>
-              <div class="tw-space-y-3">
-                <VcInput
-                  v-model="stagedFilters.startDate"
-                  type="date"
-                  :label="$t('QUOTES.PAGES.LIST.TABLE.FILTER.DATE.START_DATE')"
-                  @update:model-value="(value) => toggleFilter('startDate', String(value || ''), true)"
-                />
-                <VcInput
-                  v-model="stagedFilters.endDate"
-                  type="date"
-                  :label="$t('QUOTES.PAGES.LIST.TABLE.FILTER.DATE.END_DATE')"
-                  @update:model-value="(value) => toggleFilter('endDate', String(value || ''), true)"
-                />
-              </div>
-            </div>
-          </VcRow>
+      <VcColumn
+        id="number"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.NUMBER')"
+        :always-visible="true"
+        :sortable="true"
+        mobile-position="top-right"
+      />
 
-          <!-- Filter Controls -->
-          <div class="tw-flex tw-gap-2 tw-mt-4">
-            <VcButton
-              variant="primary"
-              :disabled="!hasFilterChanges"
-              @click="applyFilters"
-            >
-              {{ $t("QUOTES.PAGES.LIST.FILTERS.APPLY") }}
-            </VcButton>
+      <VcColumn
+        id="customerName"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.CUSTOMER')"
+        :always-visible="true"
+        :sortable="true"
+        mobile-position="bottom-left"
+      />
 
-            <VcButton
-              variant="secondary"
-              :disabled="!hasFiltersApplied"
-              @click="resetFilters"
-            >
-              {{ $t("QUOTES.PAGES.LIST.FILTERS.RESET") }}
-            </VcButton>
-          </div>
-        </div>
-      </template>
+      <VcColumn
+        id="total"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.TOTAL')"
+        :always-visible="true"
+        :sortable="true"
+        type="money"
+        mobile-position="top-right"
+      />
 
-      <template #item_lineItemsImg="{ item }">
-        <QuoteLineItemsImgTemplate :items="item.items" />
-      </template>
+      <VcColumn
+        id="status"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.STATUS')"
+        :always-visible="true"
+        :sortable="true"
+        type="status"
+        mobile-role="status"
+      >
+        <template #body="{ data }">
+          <QuoteStatusTemplate :status="data.status" />
+        </template>
+      </VcColumn>
 
-      <template #item_status="{ item }">
-        <QuoteStatusTemplate :status="item.status" />
-      </template>
-    </VcTable>
+      <VcColumn
+        id="createdDate"
+        :title="t('QUOTES.PAGES.LIST.TABLE.HEADER.CREATED')"
+        :sortable="true"
+        type="date-ago"
+        mobile-position="bottom-right"
+      />
+    </VcDataTable>
   </VcBlade>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted, watch } from "vue";
-import {
-  IBladeToolbar,
-  IParentCallArgs,
-  ITableColumns,
-  useBladeNavigation,
-  usePopup,
-  useTableSort,
-  usePermissions,
-} from "@vc-shell/framework";
+import { computed, ref, watch, onMounted } from "vue";
+import { IBladeToolbar, useBlade, useDataTableSort } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
-import { debounce } from "lodash-es";
 import { useQuotesList } from "../composables/useQuotesList";
 import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
 import { QuoteLineItemsImgTemplate, QuoteStatusTemplate } from "../components";
 
-export interface Props {
-  expanded?: boolean;
-  closable?: boolean;
-  param?: string;
-}
-
-export interface Emits {
-  (event: "parent:call", args: IParentCallArgs): void;
-  (event: "collapse:blade"): void;
-  (event: "expand:blade"): void;
-  (event: "close:blade"): void;
-}
-
-defineOptions({
+defineBlade({
   url: "/quotes",
   name: "QuotesList",
   isWorkspace: true,
   permissions: ["quote:read"],
-  notifyType: "QuoteRequestChangeEvent",
   menuItem: {
     title: "QUOTES.MENU.TITLE",
     icon: "material-request_quote",
@@ -150,93 +105,40 @@ defineOptions({
   },
 });
 
-const props = withDefaults(defineProps<Props>(), {
-  expanded: true,
-  closable: true,
-});
-
-defineEmits<Emits>();
-
 const { t } = useI18n({ useScope: "global" });
-const { openBlade } = useBladeNavigation();
+const { openBlade, expanded, param, exposeToChildren } = useBlade();
 
-const { sortExpression, handleSortChange: tableSortHandler } = useTableSort({
+const { sortField, sortOrder, sortExpression } = useDataTableSort({
+  initialField: "createdDate",
   initialDirection: "DESC",
-  initialProperty: "createdDate",
 });
 
-const {
-  items,
-  totalCount,
-  pages,
-  currentPage,
-  searchQuery,
-  loadQuotes,
-  loading,
-  statuses,
-  stagedFilters,
-  hasFilterChanges,
-  hasFiltersApplied,
-  activeFilterCount,
-  toggleFilter,
-  applyFilters,
-  resetFilters,
-  getAllStates,
-} = useQuotesList({
-  pageSize: 20,
-  sort: sortExpression.value,
-});
+const { items, totalCount, pages, currentPage, searchQuery, loadQuotes, loading, statuses, getAllStates } =
+  useQuotesList({
+    pageSize: 20,
+    sort: sortExpression.value,
+  });
 
 const title = computed(() => t("QUOTES.PAGES.LIST.TITLE"));
 const selectedItemId = ref<string>();
-const selectedItems = ref<string[]>([]);
-const searchKeyword = ref<string>();
 
-const columns = computed((): ITableColumns[] => [
-  {
-    id: "lineItemsImg",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.ITEMS_IMG"),
-    width: "75px",
-    alwaysVisible: true,
-    type: "image",
-    mobilePosition: "image",
-  },
-  {
-    id: "number",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.NUMBER"),
-    alwaysVisible: true,
-    sortable: true,
-    mobilePosition: "bottom-right",
-  },
-  {
-    id: "customerName",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.CUSTOMER"),
-    alwaysVisible: true,
-    sortable: true,
-    mobilePosition: "top-left",
-  },
-  {
-    id: "total",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.TOTAL"),
-    alwaysVisible: true,
-    sortable: true,
-    type: "money",
-    mobilePosition: "top-right",
-  },
+const globalFilters = computed(() => [
   {
     id: "status",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.STATUS"),
-    alwaysVisible: true,
-    sortable: true,
-    type: "status",
-    mobilePosition: "status",
+    label: t("QUOTES.PAGES.LIST.TABLE.FILTER.STATUS.TITLE"),
+    filter: {
+      options: statuses.value.map((s) => ({
+        value: s.value ?? "",
+        label: s.displayValue ?? "",
+      })),
+    },
   },
   {
     id: "createdDate",
-    title: t("QUOTES.PAGES.LIST.TABLE.HEADER.CREATED"),
-    sortable: true,
-    type: "date-ago",
-    mobilePosition: "bottom-left",
+    label: t("QUOTES.PAGES.LIST.TABLE.FILTER.DATE.TITLE"),
+    filter: {
+      range: ["startDate", "endDate"] as [string, string],
+    },
   },
 ]);
 
@@ -245,32 +147,36 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
     id: "refresh",
     icon: "material-refresh",
     title: t("QUOTES.PAGES.LIST.TOOLBAR.REFRESH"),
-    clickHandler: async () => {
+    async clickHandler() {
       await reload();
     },
   },
 ]);
 
-async function reload() {
-  await loadQuotes(searchQuery.value);
-}
-
-// Filter methods
-function toggleStatusFilter(value: string) {
-  toggleFilter("status", value, !!value);
-}
-
-const onSearchChange = debounce(async (keyword: string | undefined) => {
-  searchKeyword.value = keyword;
+onMounted(async () => {
+  await getAllStates();
   await loadQuotes({
-    ...searchQuery.value,
-    keyword,
+    take: 20,
+    sort: sortExpression.value,
   });
-}, 1000);
+});
 
-function onItemClick(item: QuoteRequest) {
+watch(sortExpression, async (newVal) => {
+  await loadQuotes({ ...searchQuery.value, sort: newVal });
+});
+
+watch(
+  () => param.value,
+  (newVal) => {
+    selectedItemId.value = newVal;
+  },
+  { immediate: true, deep: true },
+);
+
+async function onItemClick(event: { data: QuoteRequest }) {
+  const item = event.data;
   openBlade({
-    blade: { name: "QuoteDetails" },
+    name: "QuoteDetails",
     param: item.id,
     onOpen() {
       selectedItemId.value = item.id;
@@ -283,7 +189,7 @@ function onItemClick(item: QuoteRequest) {
 
 function openDetailsBlade(args: { param: string }) {
   openBlade({
-    blade: { name: "QuoteDetails" },
+    name: "QuoteDetails",
     param: args.param,
     onOpen() {
       selectedItemId.value = args.param;
@@ -294,10 +200,6 @@ function openDetailsBlade(args: { param: string }) {
   });
 }
 
-function onHeaderClick(item: ITableColumns) {
-  tableSortHandler(item.id);
-}
-
 async function onPaginationClick(page: number) {
   await loadQuotes({
     ...searchQuery.value,
@@ -305,40 +207,35 @@ async function onPaginationClick(page: number) {
   });
 }
 
-function onSelectionChanged(items: QuoteRequest[]) {
-  selectedItems.value = items.map((item) => item.id!);
+async function onSearchChange(keyword: string | undefined) {
+  await loadQuotes({
+    ...searchQuery.value,
+    keyword,
+    skip: 0,
+  });
 }
 
-watch(
-  () => sortExpression.value,
-  async (newVal) => {
-    await loadQuotes({
-      ...searchQuery.value,
-      sort: newVal,
-    });
-  },
-);
+async function onFilter(event: { filters: Record<string, unknown> }) {
+  await loadQuotes({
+    ...searchQuery.value,
+    status: event.filters.status as string | undefined,
+    startDate: event.filters.startDate ? new Date(event.filters.startDate as string) : undefined,
+    endDate: event.filters.endDate ? new Date(event.filters.endDate as string) : undefined,
+    skip: 0,
+  });
+}
 
-watch(
-  () => props.param,
-  (newVal) => {
-    selectedItemId.value = newVal;
-  },
-  {
-    immediate: true,
-    deep: true,
-  },
-);
+const reload = async () => {
+  await loadQuotes({
+    ...searchQuery.value,
+    skip: (currentPage.value - 1) * (searchQuery.value.take ?? 20),
+    sort: sortExpression.value,
+  });
+};
 
-onMounted(async () => {
-  await getAllStates();
-  await reload();
-});
-
-defineExpose({
+exposeToChildren({
   reload,
-  onItemClick,
-  title,
+  onItemClick: (item: QuoteRequest) => onItemClick({ data: item }),
   openDetailsBlade,
 });
 </script>
