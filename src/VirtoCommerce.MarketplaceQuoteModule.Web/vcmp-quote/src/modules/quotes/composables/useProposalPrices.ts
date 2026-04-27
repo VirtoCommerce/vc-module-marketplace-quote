@@ -53,10 +53,10 @@ export function useProposalPrices(options?: UseProposalPricesOptions): IUsePropo
     }
 
     const newPrice = {
-      ...{
+      ...({
         quantity: 1,
         price: 0,
-      } as TierPrice
+      } as TierPrice),
     } as TierPrice;
 
     item.value.proposalPrices.push(newPrice);

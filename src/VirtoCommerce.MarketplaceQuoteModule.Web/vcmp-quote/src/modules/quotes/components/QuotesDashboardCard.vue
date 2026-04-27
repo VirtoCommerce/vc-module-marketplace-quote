@@ -1,11 +1,11 @@
 <template>
   <DashboardWidgetCard
     :header="$t('QUOTES.WIDGET.TITLE')"
-    icon="material-shopping_cart"
+    icon="lucide-shopping-cart"
     :loading="loading"
   >
     <template
-      v-if="$isDesktop.value"
+      v-if="isDesktop"
       #actions
     >
       <vc-button
@@ -51,11 +51,15 @@
 </template>
 
 <script setup lang="ts">
-import { useBlade, DashboardWidgetCard } from "@vc-shell/framework";
+import { useBlade, DashboardWidgetCard, useResponsive } from "@vc-shell/framework";
 import { useQuotesList } from "../composables/useQuotesList";
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
+
+import { VcButton, VcColumn, VcDataTable } from "@vc-shell/framework/ui";
+
+const { isDesktop } = useResponsive();
 
 const { openBlade } = useBlade();
 const { loadQuotes, items, loading } = useQuotesList();

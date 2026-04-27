@@ -81,6 +81,8 @@
 import { QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { computed } from "vue";
 
+import { VcImage } from "@vc-shell/framework/ui";
+
 export interface Props {
   items: QuoteItem[] | undefined;
 }

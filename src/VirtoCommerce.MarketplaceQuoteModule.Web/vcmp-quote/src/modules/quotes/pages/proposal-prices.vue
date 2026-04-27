@@ -1,5 +1,9 @@
 <template>
-  <VcBlade :title="bladeTitle" :toolbar-items="bladeToolbar" :modified="isModified" width="50%"
+  <VcBlade
+    :title="bladeTitle"
+    :toolbar-items="bladeToolbar"
+    :modified="isModified"
+    width="50%"
   >
     <VcForm v-if="item">
       <VcContainer>
@@ -65,7 +69,16 @@ import { useI18n } from "vue-i18n";
 import { useProposalPrices } from "../composables/useProposalPrices";
 import { QuoteItem, TierPrice } from "../../../api_client/virtocommerce.marketplacequote";
 
-import { VcBlade, VcCard, VcColumn, VcContainer, VcDataTable, VcForm, VcInput, VcTextarea, } from "@vc-shell/framework/ui";
+import {
+  VcBlade,
+  VcCard,
+  VcColumn,
+  VcContainer,
+  VcDataTable,
+  VcForm,
+  VcInput,
+  VcTextarea,
+} from "@vc-shell/framework/ui";
 
 defineBlade({
   name: "ProposalPrices",
@@ -94,10 +107,11 @@ const addRowConfig = computed(() =>
 
 const rowActions = computed(() => {
   if (isDisabled.value) return undefined;
-  return () => [
+  return (_item: TierPrice) => [
     {
       icon: "lucide-trash-2",
       title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.DELETE"),
+      type: "danger" as const,
       variant: "danger" as const,
       clickHandler: (_: unknown, index: number) => removePrice(index),
     },

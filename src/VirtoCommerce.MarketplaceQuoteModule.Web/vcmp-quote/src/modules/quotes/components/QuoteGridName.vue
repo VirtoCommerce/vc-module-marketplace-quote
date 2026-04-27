@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import { VcHint } from "@vc-shell/framework/ui";
 export interface Props {
   sku: string | undefined;
   name: string | undefined;

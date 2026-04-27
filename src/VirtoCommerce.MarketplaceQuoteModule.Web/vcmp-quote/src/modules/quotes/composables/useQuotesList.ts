@@ -77,12 +77,10 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
     searchQuery.value = { ...searchQuery.value, ...(_query || {}) };
 
     const apiClient = await getApiClient();
-    searchResult.value = await apiClient.search(
-      {
-        ...searchQuery.value,
-        sellerId: sellerId,
-      } as SearchQuoteRequestsQuery,
-    );
+    searchResult.value = await apiClient.search({
+      ...searchQuery.value,
+      sellerId: sellerId,
+    } as SearchQuoteRequestsQuery);
   });
 
   // Filter state

@@ -1,5 +1,10 @@
 <template>
-  <VcBlade :loading="loading" :title="bladeTitle" :toolbar-items="bladeToolbar" :modified="isModified" width="70%"
+  <VcBlade
+    :loading="loading"
+    :title="bladeTitle"
+    :toolbar-items="bladeToolbar"
+    :modified="isModified"
+    width="70%"
   >
     <VcForm>
       <VcContainer>
@@ -282,7 +287,20 @@ import { useQuoteDetails } from "../composables/useQuoteDetails";
 import { QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { QuoteGridName } from "../components";
 
-import { VcBlade, VcCard, VcCol, VcColumn, VcContainer, VcDataTable, VcField, VcForm, VcInput, VcLabel, VcRow, VcSelect, } from "@vc-shell/framework/ui";
+import {
+  VcBlade,
+  VcCard,
+  VcCol,
+  VcColumn,
+  VcContainer,
+  VcDataTable,
+  VcField,
+  VcForm,
+  VcInput,
+  VcLabel,
+  VcRow,
+  VcSelect,
+} from "@vc-shell/framework/ui";
 
 defineBlade({
   url: "/quote-details",

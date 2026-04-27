@@ -21,6 +21,7 @@
 <script setup lang="ts">
 // eslint-disable-next-line import/no-unresolved
 import Welcome from "/assets/welcome.png";
+import { VcButton } from "@vc-shell/framework/ui";
 </script>
 
 <style lang="scss">

@@ -1,5 +1,9 @@
 <template>
-  <VcBlade :loading="loading" :title="title" :toolbar-items="bladeToolbar" width="30%"
+  <VcBlade
+    :loading="loading"
+    :title="title"
+    :toolbar-items="bladeToolbar"
+    width="30%"
   >
     <VcDataTable
       v-model:active-item-id="selectedItemId"
@@ -111,11 +115,10 @@ const { sortField, sortOrder, sortExpression } = useDataTableSort({
   initialDirection: "DESC",
 });
 
-const { items, pagination, searchQuery, loadQuotes, loading, statuses, getAllStates } =
-  useQuotesList({
-    pageSize: 20,
-    sort: sortExpression.value,
-  });
+const { items, pagination, searchQuery, loadQuotes, loading, statuses, getAllStates } = useQuotesList({
+  pageSize: 20,
+  sort: sortExpression.value,
+});
 
 const title = computed(() => t("QUOTES.PAGES.LIST.TITLE"));
 const selectedItemId = ref<string>();

@@ -18,15 +18,13 @@ import {
   VcmpQuoteClient,
   QuoteRequest,
   QuoteItem,
-  QuoteAddressAddressType,
+  AddressType,
   QuoteAddress,
   ShipmentMethod,
 } from "../../../api_client/virtocommerce.marketplacequote";
-import {
-  QuoteModuleClient,
-} from "../../../api_client/virtocommerce.quote";
+import { QuoteModuleClient } from "../../../api_client/virtocommerce.quote";
 import { useI18n } from "vue-i18n";
-import { useTimeoutFn } from '@vueuse/core'
+import { useTimeoutFn } from "@vueuse/core";
 
 export interface IShippingInfo {
   label: string;
@@ -81,15 +79,13 @@ export function useQuoteDetails(): IUseQuoteDetails {
   const toolbar = ref([]) as Ref<IBladeToolbar[]>;
   const stateMachineInstance = ref<StateMachineInstance>();
   const stateMachineLoading = ref(false);
-  const { onParentCall } = useBlade();
+  const { callParent } = useBlade();
 
   const locale = window.navigator.language;
 
   const item = ref<QuoteRequest>({} as QuoteRequest);
 
-  const shippingMethodOptions = ref(
-    [{} as ShipmentMethod]
-  );
+  const shippingMethodOptions = ref([{} as ShipmentMethod]);
 
   const { currentValue, isModified, resetModificationState } = useModificationTracker<QuoteRequestWithTotal>(item);
 
@@ -103,16 +99,14 @@ export function useQuoteDetails(): IUseQuoteDetails {
       quoteItem.proposedPrice = quoteItem.selectedTierPrice?.price ?? quoteItem.salePrice;
     });
 
-      stateMachineInstance.value = await (
-        await getStateMachineApiClient()
-      ).getStateMachineForEntity(
-        {
-          entityId: result.id!,
-          entityType: ENTITY_TYPE,
-          locale: locale,
-        } as GetStateMachineInstanceForEntityQuery,
-      );
-      refreshToolbar(stateMachineInstance.value ?? {});
+    stateMachineInstance.value = await (
+      await getStateMachineApiClient()
+    ).getStateMachineForEntity({
+      entityId: result.id!,
+      entityType: ENTITY_TYPE,
+      locale: locale,
+    } as GetStateMachineInstanceForEntityQuery);
+    refreshToolbar(stateMachineInstance.value ?? {});
 
     currentValue.value = result;
 
@@ -152,25 +146,31 @@ export function useQuoteDetails(): IUseQuoteDetails {
     }
   };
 
-  const recalculateShippingTotals = async() =>{
-    currentValue.value = await (await getApiClient()).calculateTotals({
-      ...currentValue.value
+  const recalculateShippingTotals = async () => {
+    currentValue.value = await (
+      await getApiClient()
+    ).calculateTotals({
+      ...currentValue.value,
     } as QuoteRequest);
-  }
+  };
 
-  const recalculateDiscountTotals = async() =>{
+  const recalculateDiscountTotals = async () => {
     currentValue.value.manualSubTotal = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals({
-      ...currentValue.value
+    currentValue.value = await (
+      await getApiClient()
+    ).calculateTotals({
+      ...currentValue.value,
     } as QuoteRequest);
-  }
+  };
 
-  const recalculateSubTotals = async() =>{
+  const recalculateSubTotals = async () => {
     currentValue.value.manualRelDiscountAmount = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals({
-      ...currentValue.value
+    currentValue.value = await (
+      await getApiClient()
+    ).calculateTotals({
+      ...currentValue.value,
     } as QuoteRequest);
-  }
+  };
 
   const refreshToolbar = (sm: StateMachineInstance) => {
     toolbar.value.splice(0);
@@ -191,13 +191,13 @@ export function useQuoteDetails(): IUseQuoteDetails {
               ).fireTrigger({
                 stateMachineInstanceId: sm.id!,
                 trigger: transition.trigger!,
-                entityId: sm.entityId!
+                entityId: sm.entityId!,
               } as FireStateMachineTriggerCommand);
 
               useTimeoutFn(() => {
-                onParentCall({ method: "reload" });
-                onParentCall({ method: "onItemClick", args: currentValue.value });
-              }, 500)
+                callParent("reload");
+                callParent("onItemClick", currentValue.value);
+              }, 500);
 
               refreshToolbar(currentStateMachine);
             } catch (error) {
@@ -223,16 +223,16 @@ export function useQuoteDetails(): IUseQuoteDetails {
       };
 
       switch (address.addressType) {
-        case QuoteAddressAddressType.Billing:
+        case AddressType.Billing:
           acc.push({ label: "Sold to", ...orderInfo });
           break;
-        case QuoteAddressAddressType.Shipping:
+        case AddressType.Shipping:
           acc.push({ label: "Ship to", ...orderInfo });
           break;
-        case QuoteAddressAddressType.BillingAndShipping:
+        case AddressType.BillingAndShipping:
           acc.push({ label: "Sold to", ...orderInfo }, { label: "Ship to", ...orderInfo });
           break;
-        case QuoteAddressAddressType.Pickup:
+        case AddressType.Pickup:
           acc.push({ label: "Pick-up at", ...orderInfo });
           break;
       }
@@ -302,6 +302,6 @@ export function useQuoteDetails(): IUseQuoteDetails {
     createdDate,
     resetModificationState,
     shippingMethodOptions,
-    toolbar
+    toolbar,
   };
 }

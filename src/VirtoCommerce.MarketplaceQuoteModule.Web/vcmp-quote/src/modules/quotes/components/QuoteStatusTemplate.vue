@@ -2,7 +2,7 @@
   <div class="tw-flex">
     <VcStatus
       v-bind="statusStyle(status)"
-      :dot="$isMobile.value"
+      :dot="isMobile"
     >
       {{ status }}
     </VcStatus>
@@ -10,6 +10,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useResponsive } from "@vc-shell/framework";
+
+import { VcStatus } from "@vc-shell/framework/ui";
+
+const { isMobile } = useResponsive();
 export interface Props {
   status: string | undefined;
 }

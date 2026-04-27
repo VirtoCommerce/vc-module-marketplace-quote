@@ -94,7 +94,7 @@
             "TOTAL_SHIPPING": "Total shipping (manual)",
             "RELATIVE_DISCOUNT": "Relative discount",
             "MANUAL_SUBTOTAL": "Manual subtotal",
-            "SHIPMENT_METHOD":"Shipping method"
+            "SHIPMENT_METHOD": "Shipping method"
           },
           "BUYER_RECIPIENT": {
             "SOLD_TO": "Sold to",
@@ -123,8 +123,8 @@
             "SKU": "SKU"
           },
           "OFFERS": {
-              "NOT_FOUND": "Offer does not exist. It might be already deleted."
-            },
+            "NOT_FOUND": "Offer does not exist. It might be already deleted."
+          },
           "NOT_VALID": "Form is not valid.\nPlease, check highlighted fields."
         }
       },
@@ -162,8 +162,8 @@
         "FC_DELETE": "This action can not be undone. Are you sure you want to delete Fulfillment Center? "
       }
     },
-    "PUSH":{
-      "QUOTE_CREATED":{
+    "PUSH": {
+      "QUOTE_CREATED": {
         "TITLE": "Quote request"
       }
     }
