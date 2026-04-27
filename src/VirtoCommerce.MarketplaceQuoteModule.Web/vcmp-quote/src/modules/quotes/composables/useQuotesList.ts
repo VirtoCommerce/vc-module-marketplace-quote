@@ -1,10 +1,15 @@
 import { computed, ref, ComputedRef, Ref, inject } from "vue";
-import { useAsync, useApiClient, useLoading } from "@vc-shell/framework";
+import {
+  useAsync,
+  useApiClient,
+  useLoading,
+  useDataTablePagination,
+  type UseDataTablePaginationReturn,
+} from "@vc-shell/framework";
 import {
   SearchQuoteRequestsQuery,
   VcmpQuoteClient,
   QuoteRequestSearchResult,
-  ISearchQuoteRequestsQuery,
   QuoteRequest,
 } from "../../../api_client/virtocommerce.marketplacequote";
 import { ISeller } from "@vcmp-vendor-portal/api/marketplacevendor";
@@ -21,11 +26,9 @@ interface FilterState {
 
 export interface IUseQuotesList {
   items: ComputedRef<QuoteRequest[]>;
-  totalCount: ComputedRef<number>;
-  pages: ComputedRef<number>;
-  currentPage: ComputedRef<number>;
-  searchQuery: Ref<ISearchQuoteRequestsQuery>;
-  loadQuotes: (query?: ISearchQuoteRequestsQuery) => Promise<void>;
+  pagination: UseDataTablePaginationReturn;
+  searchQuery: Ref<SearchQuoteRequestsQuery>;
+  loadQuotes: (query?: SearchQuoteRequestsQuery) => Promise<void>;
   loading: ComputedRef<boolean>;
   statuses: ComputedRef<Array<{ value: string | undefined; displayValue: string | undefined }>>;
 
@@ -57,7 +60,7 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
   const currentSeller = inject("currentSeller", toRef({ id: route?.params?.sellerId })) as Ref<ISeller>;
 
   const pageSize = options?.pageSize || 20;
-  const searchQuery = ref<ISearchQuoteRequestsQuery>({
+  const searchQuery = ref<SearchQuoteRequestsQuery>({
     take: pageSize,
     sort: options?.sort,
   });
@@ -69,16 +72,16 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
     states.value = await client.getAllStates(ENTITY_TYPE);
   });
 
-  const { action: loadQuotes, loading: loadingQuotes } = useAsync<ISearchQuoteRequestsQuery>(async (_query) => {
+  const { action: loadQuotes, loading: loadingQuotes } = useAsync<SearchQuoteRequestsQuery>(async (_query) => {
     const sellerId = currentSeller.value?.id;
     searchQuery.value = { ...searchQuery.value, ...(_query || {}) };
 
     const apiClient = await getApiClient();
     searchResult.value = await apiClient.search(
-      new SearchQuoteRequestsQuery({
+      {
         ...searchQuery.value,
         sellerId: sellerId,
-      }),
+      } as SearchQuoteRequestsQuery,
     );
   });
 
@@ -197,11 +200,15 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
     }));
   });
 
+  const pagination = useDataTablePagination({
+    pageSize,
+    totalCount: computed(() => searchResult.value?.totalCount ?? 0),
+    onPageChange: ({ skip }) => loadQuotes({ ...searchQuery.value, skip }),
+  });
+
   return {
     items: computed(() => searchResult.value?.results || []),
-    totalCount: computed(() => searchResult.value?.totalCount || 0),
-    pages: computed(() => Math.ceil((searchResult.value?.totalCount || 1) / pageSize)),
-    currentPage: computed(() => Math.ceil((searchQuery.value?.skip || 0) / Math.max(1, pageSize) + 1)),
+    pagination,
     searchQuery,
     loadQuotes,
     loading: useLoading(loadingQuotes, getAllStatesLoading),

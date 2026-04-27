@@ -1,9 +1,5 @@
 <template>
-  <VcBlade
-    :loading="loading"
-    :title="title"
-    :toolbar-items="bladeToolbar"
-    width="30%"
+  <VcBlade :loading="loading" :title="title" :toolbar-items="bladeToolbar" width="30%"
   >
     <VcDataTable
       v-model:active-item-id="selectedItemId"
@@ -11,15 +7,15 @@
       v-model:sort-order="sortOrder"
       class="tw-grow tw-basis-0"
       :items="items"
-      :total-count="totalCount"
+      :total-count="pagination.totalCount"
       :total-label="$t('QUOTES.PAGES.LIST.TABLE.TOTALS')"
-      :pagination="{ currentPage, pages }"
+      :pagination="pagination"
       :global-filters="globalFilters"
       :show-all-columns="expanded"
       state-key="QUOTES"
       :searchable="true"
       @row-click="onItemClick"
-      @pagination-click="onPaginationClick"
+      @pagination-click="pagination.goToPage"
       @search="onSearchChange"
       @filter="onFilter"
     >
@@ -93,6 +89,8 @@ import { useQuotesList } from "../composables/useQuotesList";
 import { QuoteRequest } from "../../../api_client/virtocommerce.marketplacequote";
 import { QuoteLineItemsImgTemplate, QuoteStatusTemplate } from "../components";
 
+import { VcBlade, VcColumn, VcDataTable } from "@vc-shell/framework/ui";
+
 defineBlade({
   url: "/quotes",
   name: "QuotesList",
@@ -113,7 +111,7 @@ const { sortField, sortOrder, sortExpression } = useDataTableSort({
   initialDirection: "DESC",
 });
 
-const { items, totalCount, pages, currentPage, searchQuery, loadQuotes, loading, statuses, getAllStates } =
+const { items, pagination, searchQuery, loadQuotes, loading, statuses, getAllStates } =
   useQuotesList({
     pageSize: 20,
     sort: sortExpression.value,
@@ -145,7 +143,7 @@ const globalFilters = computed(() => [
 const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "refresh",
-    icon: "material-refresh",
+    icon: "lucide-refresh-cw",
     title: t("QUOTES.PAGES.LIST.TOOLBAR.REFRESH"),
     async clickHandler() {
       await reload();
@@ -200,13 +198,6 @@ function openDetailsBlade(args: { param: string }) {
   });
 }
 
-async function onPaginationClick(page: number) {
-  await loadQuotes({
-    ...searchQuery.value,
-    skip: (page - 1) * (searchQuery.value.take ?? 20),
-  });
-}
-
 async function onSearchChange(keyword: string | undefined) {
   await loadQuotes({
     ...searchQuery.value,
@@ -228,7 +219,7 @@ async function onFilter(event: { filters: Record<string, unknown> }) {
 const reload = async () => {
   await loadQuotes({
     ...searchQuery.value,
-    skip: (currentPage.value - 1) * (searchQuery.value.take ?? 20),
+    skip: pagination.skip,
     sort: sortExpression.value,
   });
 };
