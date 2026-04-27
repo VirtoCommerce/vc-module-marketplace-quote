@@ -1,10 +1,5 @@
 <template>
-  <VcBlade
-    v-loading="loading"
-    :title="bladeTitle"
-    :toolbar-items="bladeToolbar"
-    :modified="isModified"
-    width="70%"
+  <VcBlade :loading="loading" :title="bladeTitle" :toolbar-items="bladeToolbar" :modified="isModified" width="70%"
   >
     <VcForm>
       <VcContainer>
@@ -281,11 +276,13 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from "vue";
-import { IBladeToolbar, useBlade, usePopup, VcField } from "@vc-shell/framework";
+import { IBladeToolbar, useBlade, usePopup } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
 import { useQuoteDetails } from "../composables/useQuoteDetails";
 import { QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { QuoteGridName } from "../components";
+
+import { VcBlade, VcCard, VcCol, VcColumn, VcContainer, VcDataTable, VcField, VcForm, VcInput, VcLabel, VcRow, VcSelect, } from "@vc-shell/framework/ui";
 
 defineBlade({
   url: "/quote-details",
@@ -329,7 +326,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "save",
     title: t("QUOTES.PAGES.DETAILS.TOOLBAR.SAVE"),
-    icon: "material-save",
+    icon: "lucide-save",
     async clickHandler() {
       if (item.value) {
         await saveQuote(item.value);
@@ -343,7 +340,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "reset",
     title: t("QUOTES.PAGES.DETAILS.TOOLBAR.RESET"),
-    icon: "material-undo",
+    icon: "lucide-undo-2",
     async clickHandler() {
       resetModificationState();
     },
