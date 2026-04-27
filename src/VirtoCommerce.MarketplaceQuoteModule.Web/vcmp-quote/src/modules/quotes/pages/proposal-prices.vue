@@ -1,9 +1,5 @@
 <template>
-  <VcBlade
-    :title="bladeTitle"
-    :toolbar-items="bladeToolbar"
-    :modified="isModified"
-    width="50%"
+  <VcBlade :title="bladeTitle" :toolbar-items="bladeToolbar" :modified="isModified" width="50%"
   >
     <VcForm v-if="item">
       <VcContainer>
@@ -67,7 +63,9 @@ import { computed, onMounted } from "vue";
 import { IBladeToolbar, useBlade } from "@vc-shell/framework";
 import { useI18n } from "vue-i18n";
 import { useProposalPrices } from "../composables/useProposalPrices";
-import { QuoteItem, ITierPrice } from "../../../api_client/virtocommerce.marketplacequote";
+import { QuoteItem, TierPrice } from "../../../api_client/virtocommerce.marketplacequote";
+
+import { VcBlade, VcCard, VcColumn, VcContainer, VcDataTable, VcForm, VcInput, VcTextarea, } from "@vc-shell/framework/ui";
 
 defineBlade({
   name: "ProposalPrices",
@@ -98,7 +96,7 @@ const rowActions = computed(() => {
   if (isDisabled.value) return undefined;
   return () => [
     {
-      icon: "material-delete",
+      icon: "lucide-trash-2",
       title: t("QUOTES.PAGES.PROPOSAL_PRICES.FIELDS.DELETE"),
       variant: "danger" as const,
       clickHandler: (_: unknown, index: number) => removePrice(index),
@@ -110,7 +108,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "apply",
     title: t("QUOTES.PAGES.PROPOSAL_PRICES.TOOLBAR.APPLY"),
-    icon: "material-check",
+    icon: "lucide-check",
     async clickHandler() {
       if (item.value) {
         await callParent("recalculateItemTotals", { quoteItem: item.value });
@@ -130,7 +128,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
   {
     id: "cancel",
     title: t("QUOTES.PAGES.PROPOSAL_PRICES.TOOLBAR.CANCEL"),
-    icon: "material-cancel",
+    icon: "lucide-x",
     async clickHandler() {
       closeSelf();
     },
@@ -148,7 +146,7 @@ const bladeToolbar = computed((): IBladeToolbar[] => [
 
 const onEditComplete = (args: { data: unknown; field: string; newValue: unknown; index: number }) => {
   if (item.value?.proposalPrices) {
-    item.value.proposalPrices[args.index][args.field as keyof ITierPrice] = args.newValue as number;
+    item.value.proposalPrices[args.index][args.field as keyof TierPrice] = args.newValue as number;
   }
 };
 
