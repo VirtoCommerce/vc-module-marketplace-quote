@@ -1,5 +1,13 @@
 import { computed, ref, ComputedRef, Ref } from "vue";
-import { useAsync, useApiClient, useLoading, useModificationTracker, IBladeToolbar, useBladeNavigation } from "@vc-shell/framework";
+import {
+  useAsync,
+  useApiClient,
+  useLoading,
+  useModificationTracker,
+  IBladeToolbar,
+  useBlade,
+  formatDateWithPattern,
+} from "@vc-shell/framework";
 import {
   GetStateMachineInstanceForEntityQuery,
   FireStateMachineTriggerCommand,
@@ -17,7 +25,6 @@ import {
 import {
   QuoteModuleClient,
 } from "../../../api_client/virtocommerce.quote";
-import moment from "moment";
 import { useI18n } from "vue-i18n";
 import { useTimeoutFn } from '@vueuse/core'
 
@@ -74,14 +81,14 @@ export function useQuoteDetails(): IUseQuoteDetails {
   const toolbar = ref([]) as Ref<IBladeToolbar[]>;
   const stateMachineInstance = ref<StateMachineInstance>();
   const stateMachineLoading = ref(false);
-  const { onParentCall } = useBladeNavigation();
+  const { onParentCall } = useBlade();
 
   const locale = window.navigator.language;
 
-  const item = ref<QuoteRequest>(new QuoteRequest());
+  const item = ref<QuoteRequest>({} as QuoteRequest);
 
   const shippingMethodOptions = ref(
-    [new ShipmentMethod()]
+    [{} as ShipmentMethod]
   );
 
   const { currentValue, isModified, resetModificationState } = useModificationTracker<QuoteRequestWithTotal>(item);
@@ -99,11 +106,11 @@ export function useQuoteDetails(): IUseQuoteDetails {
       stateMachineInstance.value = await (
         await getStateMachineApiClient()
       ).getStateMachineForEntity(
-        new GetStateMachineInstanceForEntityQuery({
+        {
           entityId: result.id!,
           entityType: ENTITY_TYPE,
           locale: locale,
-        }),
+        } as GetStateMachineInstanceForEntityQuery,
       );
       refreshToolbar(stateMachineInstance.value ?? {});
 
@@ -146,17 +153,23 @@ export function useQuoteDetails(): IUseQuoteDetails {
   };
 
   const recalculateShippingTotals = async() =>{
-    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
+    currentValue.value = await (await getApiClient()).calculateTotals({
+      ...currentValue.value
+    } as QuoteRequest);
   }
 
   const recalculateDiscountTotals = async() =>{
     currentValue.value.manualSubTotal = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
+    currentValue.value = await (await getApiClient()).calculateTotals({
+      ...currentValue.value
+    } as QuoteRequest);
   }
 
   const recalculateSubTotals = async() =>{
     currentValue.value.manualRelDiscountAmount = undefined;
-    currentValue.value = await (await getApiClient()).calculateTotals(new QuoteRequest(currentValue.value));
+    currentValue.value = await (await getApiClient()).calculateTotals({
+      ...currentValue.value
+    } as QuoteRequest);
   }
 
   const refreshToolbar = (sm: StateMachineInstance) => {
@@ -175,11 +188,11 @@ export function useQuoteDetails(): IUseQuoteDetails {
               stateMachineLoading.value = true;
               const currentStateMachine = await (
                 await getStateMachineApiClient()
-              ).fireTrigger(new FireStateMachineTriggerCommand({
+              ).fireTrigger({
                 stateMachineInstanceId: sm.id!,
                 trigger: transition.trigger!,
                 entityId: sm.entityId!
-              }));
+              } as FireStateMachineTriggerCommand);
 
               useTimeoutFn(() => {
                 onParentCall({ method: "reload" });
@@ -264,7 +277,7 @@ export function useQuoteDetails(): IUseQuoteDetails {
 
   const createdDate = computed(() => {
     if (!currentValue.value.createdDate) return "";
-    return moment(currentValue.value.createdDate).format("L LT");
+    return formatDateWithPattern(currentValue.value.createdDate, "L LT", locale);
   });
 
   return {
