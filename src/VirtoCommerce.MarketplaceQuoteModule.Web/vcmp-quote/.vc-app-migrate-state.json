@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "fromVersion": "2.0.0-alpha.28",
+  "toVersion": "2.0.1",
+  "completedAt": "2026-04-27",
+  "topics": {
+    "icon-audit": {
+      "status": "completed",
+      "affectedFiles": [
+        "src/modules/quotes/notifications/QuoteRequestChangeEvent.vue",
+        "src/modules/quotes/pages/proposal-prices.vue",
+        "src/modules/quotes/pages/quote-details.vue",
+        "src/modules/quotes/pages/quotes-list.vue"
+      ]
+    },
+    "manual-migration-audit": {
+      "status": "completed",
+      "affectedFiles": [
+        "src/modules/quotes/composables/useQuoteDetails.ts"
+      ]
+    },
+    "use-blade-form": {
+      "status": "completed",
+      "affectedFiles": [
+        "src/modules/quotes/composables/useProposalPrices.ts"
+      ]
+    },
+    "use-data-table-pagination-audit": {
+      "status": "completed",
+      "affectedFiles": [
+        "src/modules/quotes/composables/useQuotesList.ts",
+        "src/modules/quotes/pages/quotes-list.vue"
+      ]
+    }
+  },
+  "postAiFixes": {
+    "src/modules/quotes/composables/useQuoteDetails.ts": [
+      "QuoteAddressAddressType -> AddressType (Interface-style enum rename)",
+      "onParentCall({method, args}) -> callParent(method, args)"
+    ],
+    "src/modules/quotes/pages/proposal-prices.vue": [
+      "rowActions: () => [...] -> (item: TierPrice) => [...] with required type field"
+    ],
+    "src/router/routes.ts": [
+      "Removed legacy catch-all route and useBlade().routeResolver (plugin-v2 handles URL resolution automatically)"
+    ]
+  },
+  "verification": {
+    "typeCheck": "pass",
+    "build": "pass",
+    "prettier": "pass"
+  }
+}
