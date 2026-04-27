@@ -29,7 +29,7 @@ const notificationTitle = computed(() => {
 
 const notificationStyle = computed(() => ({
   color: "var(--success-400)",
-  icon: "material-request_quote",
+  icon: "lucide-file-text",
 }));
 
 const onClick = async () => {
