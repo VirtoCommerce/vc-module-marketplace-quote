@@ -98,7 +98,7 @@ defineBlade({
   permissions: ["quote:read"],
   menuItem: {
     title: "QUOTES.MENU.TITLE",
-    icon: "material-request_quote",
+    icon: "lucide-file-text",
     priority: 1,
   },
 });
