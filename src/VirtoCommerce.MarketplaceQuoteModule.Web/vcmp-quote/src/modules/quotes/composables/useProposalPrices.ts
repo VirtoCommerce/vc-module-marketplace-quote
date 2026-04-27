@@ -1,73 +1,75 @@
-import { ref, Ref, watch, nextTick } from "vue";
-import { useModificationTracker } from "@vc-shell/framework";
-import { TierPrice, ITierPrice, IQuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
+import { ref, Ref, watch, nextTick, ComputedRef } from "vue";
+import { useBladeForm } from "@vc-shell/framework";
+import { TierPrice, QuoteItem } from "../../../api_client/virtocommerce.marketplacequote";
 import { cloneDeep } from "lodash-es";
 import { watchDebounced } from "@vueuse/core";
-import { useForm, FormMeta } from "vee-validate";
+import type { FormMeta } from "vee-validate";
 
 export interface IUseProposalPrices {
-  item: Ref<IQuoteItem | undefined>;
-  isModified: Ref<boolean>;
+  item: Ref<QuoteItem | undefined>;
+  isModified: ComputedRef<boolean>;
   validationErrors: Ref<Record<string, string[]>>;
   duplicateErrors: Ref<string[]>;
-  meta: Ref<FormMeta<IQuoteItem>>;
+  meta: Ref<FormMeta<QuoteItem>>;
 
   // Methods
-  loadItem: (quoteItem: IQuoteItem) => void;
+  loadItem: (quoteItem: QuoteItem) => void;
   addPrice: () => void;
   removePrice: (index: number | undefined) => void;
 }
 
 export interface UseProposalPricesOptions {
-  quoteItem?: IQuoteItem;
+  quoteItem?: QuoteItem;
   disabled?: boolean;
 }
 
 export function useProposalPrices(options?: UseProposalPricesOptions): IUseProposalPrices {
   // State
-  const item = ref<IQuoteItem | undefined>(options?.quoteItem ? cloneDeep(options.quoteItem) : undefined);
+  const item = ref<QuoteItem | undefined>(options?.quoteItem ? cloneDeep(options.quoteItem) : undefined);
   const validationErrors = ref<Record<string, string[]>>({});
   const duplicateErrors = ref<string[]>([]);
-  const { setFieldError, meta, errorBag } = useForm({
-    validateOnMount: false,
+
+  const { isModified, setBaseline, setFieldError, errorBag, formMeta } = useBladeForm({
+    data: item,
   });
 
-  const { currentValue, isModified, resetModificationState } = useModificationTracker(item);
-
   // Methods
-  const loadItem = (quoteItem: IQuoteItem) => {
-    resetModificationState(cloneDeep(quoteItem));
-    currentValue.value = cloneDeep(quoteItem);
+  const loadItem = (quoteItem: QuoteItem) => {
+    item.value = cloneDeep(quoteItem);
 
     // Initialize proposalPrices if not exists
-    if (!currentValue.value.proposalPrices) {
-      currentValue.value.proposalPrices = [];
+    if (item.value && !item.value.proposalPrices) {
+      item.value.proposalPrices = [];
     }
+
+    setBaseline();
   };
 
   const addPrice = () => {
-    if (!currentValue.value) return;
+    if (!item.value) return;
 
-    if (!currentValue.value.proposalPrices) {
-      currentValue.value.proposalPrices = [];
+    if (!item.value.proposalPrices) {
+      item.value.proposalPrices = [];
     }
 
-    const newPrice = new TierPrice({
-      quantity: 1,
-      price: 0,
-    } as ITierPrice);
+    const newPrice = {
+      ...{
+        quantity: 1,
+        price: 0,
+      } as TierPrice
+    } as TierPrice;
 
-    currentValue.value.proposalPrices.push(newPrice);
+    item.value.proposalPrices.push(newPrice);
   };
 
   const removePrice = (index: number | undefined) => {
-    if (!currentValue.value?.proposalPrices || index === undefined) return;
-    currentValue.value.proposalPrices.splice(index, 1);
+    if (!item.value?.proposalPrices || index === undefined) return;
+    item.value.proposalPrices.splice(index, 1);
   };
 
   // Watchers for duplicate quantity validation
   watch(
-    () => currentValue.value?.proposalPrices,
+    () => item.value?.proposalPrices,
     (newPrices) => {
       nextTick(() => {
         const duplicates: string[] = [];
@@ -130,11 +132,11 @@ export function useProposalPrices(options?: UseProposalPricesOptions): IUsePropo
   );
 
   return {
-    item: currentValue,
+    item,
     isModified,
     validationErrors,
     duplicateErrors,
-    meta,
+    meta: formMeta as Ref<FormMeta<QuoteItem>>,
     loadItem,
     addPrice,
     removePrice,
