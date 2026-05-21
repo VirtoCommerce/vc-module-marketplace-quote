@@ -336,4 +336,6 @@ ASALocalRun/
 *.zip
 .nuke
 dist/
+# MF plugin remote build output (platform manifest discovery folder)
+src/VirtoCommerce.MarketplaceQuoteModule.Web/plugins/
 **/Properties/launchSettings.json
