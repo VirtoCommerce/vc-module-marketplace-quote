@@ -12,8 +12,4 @@ export default getDynamicModuleConfiguration({
   appId: "vendor-portal",
   moduleRoot,
   remoteName: "VirtoCommerce.MarketplaceQuote",
-  // Match the platform's default for PluginRemote.exposed ("./Module" with
-  // capital M). mf-module's helper defaults to "./module" (lowercase) which
-  // does not match — fixed there in a follow-up.
-  exposes: { "./Module": "./src/modules/index.ts" },
 });
