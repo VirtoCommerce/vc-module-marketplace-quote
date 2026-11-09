@@ -17,7 +17,7 @@ namespace VirtoCommerce.MarketplaceQuoteModule.Data.MySql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "10.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -54,6 +54,9 @@ namespace VirtoCommerce.MarketplaceQuoteModule.Data.MySql.Migrations
                     b.Property<string>("FirstName")
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(128)
@@ -579,6 +582,9 @@ namespace VirtoCommerce.MarketplaceQuoteModule.Data.MySql.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
+
+                    b.Property<bool>("IsSelected")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 4)
