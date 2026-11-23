@@ -1,14 +1,14 @@
 angular.module('virtoCommerce.marketplaceQuoteModule')
     .controller('virtoCommerce.marketplaceQuoteModule.sellerQuotesListController',
-        ['$scope', 'virtoCommerce.quoteModule.quotes', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
-        function ($scope, quotes, dialogService, uiGridHelper, bladeUtils) {
+        ['$scope', 'virtoCommerce.quoteModule.quotes', 'virtoCommerce.marketplaceQuoteModule.webApi', 'platformWebApp.dialogService', 'platformWebApp.uiGridHelper', 'platformWebApp.bladeUtils',
+        function ($scope, quotes, marketplaceQuoteApi, dialogService, uiGridHelper, bladeUtils) {
             $scope.uiGridConstants = uiGridHelper.uiGridConstants;
             var blade = $scope.blade;
             var bladeNavigationService = bladeUtils.bladeNavigationService;
 
             blade.refresh = function () {
                 blade.isLoading = true;
-                quotes.search({
+                marketplaceQuoteApi.searchQuoteRequests({
                     keyword: filter.keyword,
                     sellerId: blade.sellerId,
                     sort: uiGridHelper.getSortExpression($scope),
@@ -18,7 +18,9 @@ angular.module('virtoCommerce.marketplaceQuoteModule')
                     blade.isLoading = false;
 
                     $scope.pageSettings.totalItems = data.totalCount;
-                    blade.currentEntities = data.results;
+                    blade.currentEntities = _.map(data.results, function (x) { return x.quoteRequest; });
+                }, function () {
+                    blade.isLoading = false;
                 });
             }
 

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.PushNotifications;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
 using VirtoCommerce.Platform.Core.Events;
@@ -21,6 +23,8 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
     private readonly IStateMachineInstanceService _stateMachineInstanceService;
     private readonly ISettingsManager _settingsManager;
     private readonly IPushNotificationManager _pushNotifier;
+    private readonly ISellerQuoteRequestService _sellerQuoteRequestService;
+    private readonly ISellerQuoteRequestCrudService _sellerQuoteRequestCrudService;
 
     public SubmitQuoteRequestEventHandler(
         IQuoteRequestService quoteRequestService,
@@ -28,7 +32,9 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
         IStateMachineDefinitionService stateMachineDefinitionService,
         IStateMachineInstanceService stateMachineInstanceService,
         ISettingsManager settingsManager,
-        IPushNotificationManager pushNotifier
+        IPushNotificationManager pushNotifier,
+        ISellerQuoteRequestService sellerQuoteRequestService,
+        ISellerQuoteRequestCrudService sellerQuoteRequestCrudService
         )
     {
         _quoteRequestService = quoteRequestService;
@@ -37,6 +43,8 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
         _stateMachineInstanceService = stateMachineInstanceService;
         _settingsManager = settingsManager;
         _pushNotifier = pushNotifier;
+        _sellerQuoteRequestService = sellerQuoteRequestService;
+        _sellerQuoteRequestCrudService = sellerQuoteRequestCrudService;
     }
 
     public virtual async Task Handle(QuoteRequestChangeEvent message)
@@ -55,14 +63,16 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
             {
                 var quoteRequestStateMachineDefinition = await _stateMachineDefinitionService.GetActiveStateMachineDefinitionAsync(StateMachineObjectType.QuoteRequest);
 
-                var splittedQuoteRequests = await _quoteRequestSplitter.SplitQuoteRequest(quoteRequest.NewEntry);
+                var sellerQuoteRequests = await _quoteRequestSplitter.SplitQuoteRequest(quoteRequest.NewEntry);
 
-                if (splittedQuoteRequests.Any())
+                if (sellerQuoteRequests.Any())
                 {
                     using (EventSuppressor.SuppressEvents())
                     {
-                        foreach (var splittedQuoteRequest in splittedQuoteRequests)
+                        foreach (var sellerQuoteRequest in sellerQuoteRequests)
                         {
+                            var splittedQuoteRequest = sellerQuoteRequest.QuoteRequest;
+
                             var existedStateMachineInstance = await _stateMachineInstanceService.GetForEntity(splittedQuoteRequest.Id, StateMachineObjectType.QuoteRequest);
                             if (existedStateMachineInstance == null)
                             {
@@ -77,14 +87,17 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
                             }
                         }
 
-                        await _quoteRequestService.SaveChangesAsync(splittedQuoteRequests);
+                        await _quoteRequestService.SaveChangesAsync(sellerQuoteRequests.Select(x => x.QuoteRequest).ToArray());
                     }
 
-                    foreach (var splittedQuoteRequest in splittedQuoteRequests)
+                    await SaveSellerQuoteRequestsAsync(sellerQuoteRequests);
+
+                    foreach (var sellerQuoteRequest in sellerQuoteRequests)
                     {
-                        if (!string.IsNullOrEmpty(splittedQuoteRequest.SellerId))
+                        if (!string.IsNullOrEmpty(sellerQuoteRequest.SellerId))
                         {
-                            var pushNotification = new QuoteRequestSubmittedPushNotification(splittedQuoteRequest.SellerId)
+                            var splittedQuoteRequest = sellerQuoteRequest.QuoteRequest;
+                            var pushNotification = new QuoteRequestSubmittedPushNotification(sellerQuoteRequest.SellerId)
                             {
                                 NotifyType = nameof(QuoteRequestChangeEvent),
                                 QuoteRequestId = splittedQuoteRequest.Id,
@@ -97,5 +110,27 @@ public class SubmitQuoteRequestEventHandler : IEventHandler<QuoteRequestChangeEv
                 }
             }
         }
+    }
+
+    protected virtual async Task SaveSellerQuoteRequestsAsync(IList<SellerQuoteRequest> sellerQuoteRequests)
+    {
+        // The quote request may be split again (e.g. it went back to Processing), so update existing links instead of duplicating them
+        var quoteRequestIds = sellerQuoteRequests.Select(x => x.QuoteRequest.Id).ToList();
+        var existingLinks = (await _sellerQuoteRequestService.GetByQuoteRequestIdsAsync(quoteRequestIds))
+            .ToDictionary(x => x.QuoteRequestId);
+
+        foreach (var sellerQuoteRequest in sellerQuoteRequests)
+        {
+            sellerQuoteRequest.QuoteRequestId = sellerQuoteRequest.QuoteRequest.Id;
+
+            if (existingLinks.TryGetValue(sellerQuoteRequest.QuoteRequestId, out var existingLink))
+            {
+                sellerQuoteRequest.Id = existingLink.Id;
+                sellerQuoteRequest.CreatedBy = existingLink.CreatedBy;
+                sellerQuoteRequest.CreatedDate = existingLink.CreatedDate;
+            }
+        }
+
+        await _sellerQuoteRequestCrudService.SaveChangesAsync(sellerQuoteRequests);
     }
 }

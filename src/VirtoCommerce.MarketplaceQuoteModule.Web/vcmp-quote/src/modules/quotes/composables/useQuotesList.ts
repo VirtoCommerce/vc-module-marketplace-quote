@@ -9,7 +9,7 @@ import {
 import {
   SearchQuoteRequestsQuery,
   VcmpQuoteClient,
-  QuoteRequestSearchResult,
+  SellerQuoteSearchResult,
   QuoteRequest,
 } from "../../../api_client/virtocommerce.marketplacequote";
 import { ISeller } from "@vcmp-vendor-portal/api/marketplacevendor";
@@ -24,8 +24,15 @@ interface FilterState {
   [key: string]: string[] | string | undefined;
 }
 
+/** Table row: the quote request flattened together with its marketplace data */
+export type QuoteListItem = QuoteRequest & {
+  sellerId?: string;
+  sellerName?: string;
+  total?: number;
+};
+
 export interface IUseQuotesList {
-  items: ComputedRef<QuoteRequest[]>;
+  items: ComputedRef<QuoteListItem[]>;
   pagination: UseDataTablePaginationReturn;
   searchQuery: Ref<SearchQuoteRequestsQuery>;
   loadQuotes: (query?: SearchQuoteRequestsQuery) => Promise<void>;
@@ -64,7 +71,7 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
     take: pageSize,
     sort: options?.sort,
   });
-  const searchResult = ref<QuoteRequestSearchResult>();
+  const searchResult = ref<SellerQuoteSearchResult>();
   const states = ref<StateMachineStateShort[]>([]);
 
   const { action: getAllStates, loading: getAllStatesLoading } = useAsync(async () => {
@@ -205,7 +212,16 @@ export function useQuotesList(options?: UseQuotesListOptions): IUseQuotesList {
   });
 
   return {
-    items: computed(() => searchResult.value?.results || []),
+    items: computed(() =>
+      (searchResult.value?.results || []).map(
+        (x): QuoteListItem => ({
+          ...x.quoteRequest,
+          sellerId: x.sellerId,
+          sellerName: x.sellerName,
+          total: x.total,
+        }),
+      ),
+    ),
     pagination,
     searchQuery,
     loadQuotes,

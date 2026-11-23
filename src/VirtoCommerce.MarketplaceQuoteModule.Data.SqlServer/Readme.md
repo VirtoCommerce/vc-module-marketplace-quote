@@ -1,6 +1,6 @@
 ## Package manager
 ```
-Add-Migration Initial -Context VirtoCommerce.MarketplaceQuoteModule.Data.Repositories.MarketplaceQuoteModuleDbContext -Project VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer -StartupProject VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer -OutputDir Migrations -Verbose -Debug
+Add-Migration Initial -Context VirtoCommerce.MarketplaceQuoteModule.Data.Repositories.SellerQuoteDbContext -Project VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer -StartupProject VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer -OutputDir Migrations -Verbose -Debug
 ```
 
 ### Entity Framework Core Commands

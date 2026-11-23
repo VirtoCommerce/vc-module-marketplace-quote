@@ -71,7 +71,7 @@ export class VcmpQuoteClient extends AuthApiBase {
    * @param body (optional)
    * @return OK
    */
-  search(body?: SearchQuoteRequestsQuery | undefined): Promise<QuoteRequestSearchResult> {
+  search(body?: SearchQuoteRequestsQuery | undefined): Promise<SellerQuoteSearchResult> {
     let url_ = this.baseUrl + "/api/vcmp/quote/search";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -95,7 +95,7 @@ export class VcmpQuoteClient extends AuthApiBase {
       });
   }
 
-  protected processSearch(response: Response): Promise<QuoteRequestSearchResult> {
+  protected processSearch(response: Response): Promise<SellerQuoteSearchResult> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && response.headers.forEach) {
@@ -105,7 +105,7 @@ export class VcmpQuoteClient extends AuthApiBase {
       return response.text().then((_responseText) => {
         let result200: any = null;
         result200 =
-          _responseText === "" ? null : (JSON.parse(_responseText, this.jsonParseReviver) as QuoteRequestSearchResult);
+          _responseText === "" ? null : (JSON.parse(_responseText, this.jsonParseReviver) as SellerQuoteSearchResult);
         return result200;
       });
     } else if (status === 401) {
@@ -121,14 +121,14 @@ export class VcmpQuoteClient extends AuthApiBase {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<QuoteRequestSearchResult>(null as any);
+    return Promise.resolve<SellerQuoteSearchResult>(null as any);
   }
 
   /**
    * @param id (optional)
    * @return OK
    */
-  getById(id?: string | undefined): Promise<VcmpQuoteRequest> {
+  getById(id?: string | undefined): Promise<SellerQuoteResponse> {
     let url_ = this.baseUrl + "/api/vcmp/quote/getbyid?";
     if (id === null) throw new globalThis.Error("The parameter 'id' cannot be null.");
     else if (id !== undefined) url_ += "id=" + encodeURIComponent("" + id) + "&";
@@ -150,7 +150,7 @@ export class VcmpQuoteClient extends AuthApiBase {
       });
   }
 
-  protected processGetById(response: Response): Promise<VcmpQuoteRequest> {
+  protected processGetById(response: Response): Promise<SellerQuoteResponse> {
     const status = response.status;
     let _headers: any = {};
     if (response.headers && response.headers.forEach) {
@@ -160,7 +160,7 @@ export class VcmpQuoteClient extends AuthApiBase {
       return response.text().then((_responseText) => {
         let result200: any = null;
         result200 =
-          _responseText === "" ? null : (JSON.parse(_responseText, this.jsonParseReviver) as VcmpQuoteRequest);
+          _responseText === "" ? null : (JSON.parse(_responseText, this.jsonParseReviver) as SellerQuoteResponse);
         return result200;
       });
     } else if (status === 401) {
@@ -176,7 +176,7 @@ export class VcmpQuoteClient extends AuthApiBase {
         return throwException("An unexpected server error occurred.", status, _responseText, _headers);
       });
     }
-    return Promise.resolve<VcmpQuoteRequest>(null as any);
+    return Promise.resolve<SellerQuoteResponse>(null as any);
   }
 
   /**
@@ -920,11 +920,6 @@ export interface QuoteRequestCondition {
   children?: IConditionTree[] | undefined;
 }
 
-export interface QuoteRequestSearchResult {
-  totalCount?: number;
-  results?: QuoteRequest[] | undefined;
-}
-
 export interface QuoteRequestTotals {
   originalSubTotalExlTax?: number;
   subTotalExlTax?: number;
@@ -938,6 +933,7 @@ export interface QuoteRequestTotals {
 
 export interface SearchQuoteRequestsQuery {
   sellerId?: string | undefined;
+  sellerName?: string | undefined;
   number?: string | undefined;
   numberKeyword?: string | undefined;
   customerId?: string | undefined;
@@ -1116,51 +1112,16 @@ If set to false, the product is considered in stock without any inventory limita
   id?: string | undefined;
 }
 
-export interface VcmpQuoteRequest {
+export interface SellerQuoteResponse {
+  quoteRequest?: QuoteRequest | undefined;
   sellerId?: string | undefined;
   sellerName?: string | undefined;
   readonly total?: number;
-  number?: string | undefined;
-  storeId?: string | undefined;
-  channelId?: string | undefined;
-  isAnonymous?: boolean;
-  customerId?: string | undefined;
-  customerName?: string | undefined;
-  organizationName?: string | undefined;
-  organizationId?: string | undefined;
-  employeeId?: string | undefined;
-  employeeName?: string | undefined;
-  expirationDate?: Date | undefined;
-  reminderDate?: Date | undefined;
-  enableNotification?: boolean;
-  isLocked?: boolean;
-  status?: string | undefined;
-  tag?: string | undefined;
-  comment?: string | undefined;
-  innerComment?: string | undefined;
-  currency?: string | undefined;
-  coupon?: string | undefined;
-  manualShippingTotal?: number;
-  manualSubTotal?: number;
-  manualRelDiscountAmount?: number;
-  totals?: QuoteRequestTotals | undefined;
-  shipmentMethod?: ShipmentMethod | undefined;
-  addresses?: QuoteAddress[] | undefined;
-  items?: QuoteItem[] | undefined;
-  attachments?: QuoteAttachment[] | undefined;
-  operationsLog?: OperationLog[] | undefined;
-  languageCode?: string | undefined;
-  taxDetails?: TaxDetail[] | undefined;
-  isCancelled?: boolean;
-  cancelledDate?: Date | undefined;
-  cancelReason?: string | undefined;
-  readonly objectType?: string | undefined;
-  dynamicProperties?: DynamicObjectProperty[] | undefined;
-  createdDate?: Date;
-  modifiedDate?: Date | undefined;
-  createdBy?: string | undefined;
-  modifiedBy?: string | undefined;
-  id?: string | undefined;
+}
+
+export interface SellerQuoteSearchResult {
+  totalCount?: number;
+  results?: SellerQuoteResponse[] | undefined;
 }
 
 export class ApiException extends Error {

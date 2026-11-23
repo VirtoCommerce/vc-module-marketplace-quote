@@ -1,7 +1,7 @@
 angular.module('virtoCommerce.marketplaceQuoteModule')
     .controller('virtoCommerce.marketplaceQuoteModule.sellerQuotesWidgetController',
-        ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.quoteModule.quotes',
-        function ($scope, bladeNavigationService, quotesApi) {
+        ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.marketplaceQuoteModule.webApi',
+        function ($scope, bladeNavigationService, marketplaceQuoteApi) {
             var sellerId = $scope.widget.blade.currentEntity.id;
             
             var searchCriteria = {
@@ -10,7 +10,7 @@ angular.module('virtoCommerce.marketplaceQuoteModule')
                 skip: 0,
                 take: 0
             };
-            quotesApi.search(searchCriteria, function (data) {
+            marketplaceQuoteApi.searchQuoteRequests(searchCriteria, function (data) {
                 $scope.quotesCount = data.totalCount;
             });
 

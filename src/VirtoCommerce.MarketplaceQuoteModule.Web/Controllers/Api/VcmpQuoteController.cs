@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -5,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Conditions;
+using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Commands;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Queries;
 using VirtoCommerce.MarketplaceVendorModule.Core.Common;
 using VirtoCommerce.MarketplaceVendorModule.Data.Authorization;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.QuoteModule.Core.Models;
 using Permissions = VirtoCommerce.QuoteModule.Core.ModuleConstants.Security.Permissions;
 
@@ -33,7 +34,7 @@ public class VcmpQuoteController : ControllerBase
 
     [HttpPost]
     [Route("search")]
-    public async Task<ActionResult<QuoteRequestSearchResult>> Search([FromBody] SearchQuoteRequestsQuery query)
+    public async Task<ActionResult<SellerQuoteSearchResult>> Search([FromBody] SearchQuoteRequestsQuery query)
     {
         var authorizationResult = await _authorizationService.AuthorizeAsync(User, query, new SellerAuthorizationRequirement(Permissions.Read));
         if (!authorizationResult.Succeeded)
@@ -46,9 +47,9 @@ public class VcmpQuoteController : ControllerBase
 
     [HttpGet]
     [Route("getbyid")]
-    public async Task<ActionResult<VcmpQuoteRequest>> GetById([FromQuery] string id)
+    public async Task<ActionResult<SellerQuoteResponse>> GetById([FromQuery] string id)
     {
-        var query = AbstractTypeFactory<GetQuoteRequestQuery>.TryCreateInstance();
+        var query = ExType<GetQuoteRequestQuery>.New();
         query.Id = id;
 
         var authorizationResult = await _authorizationService.AuthorizeAsync(User, query, new SellerAuthorizationRequirement(Permissions.Read));
@@ -90,7 +91,17 @@ public class VcmpQuoteController : ControllerBase
         {
             return Forbid();
         }
-        await _mediator.Send(command);
+
+        try
+        {
+            await _mediator.Send(command);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // The quote request belongs to another seller
+            return Forbid();
+        }
+
         return NoContent();
     }
 

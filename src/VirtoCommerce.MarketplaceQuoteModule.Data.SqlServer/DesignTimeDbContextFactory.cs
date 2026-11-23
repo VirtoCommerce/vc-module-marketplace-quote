@@ -4,17 +4,17 @@ using VirtoCommerce.MarketplaceQuoteModule.Data.Repositories;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Data.SqlServer;
 
-public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<VcmpQuoteDbContext>
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<SellerQuoteDbContext>
 {
-    public VcmpQuoteDbContext CreateDbContext(string[] args)
+    public SellerQuoteDbContext CreateDbContext(string[] args)
     {
-        var builder = new DbContextOptionsBuilder<VcmpQuoteDbContext>();
+        var builder = new DbContextOptionsBuilder<SellerQuoteDbContext>();
         var connectionString = args.Length != 0 ? args[0] : "Server=(local);User=virto;Password=virto;Database=VirtoCommerce3;";
 
         builder.UseSqlServer(
             connectionString,
             options => options.MigrationsAssembly(typeof(SqlServerDataAssemblyMarker).Assembly.GetName().Name));
 
-        return new VcmpQuoteDbContext(builder.Options);
+        return new SellerQuoteDbContext(builder.Options);
     }
 }

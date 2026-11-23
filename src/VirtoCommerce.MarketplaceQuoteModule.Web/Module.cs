@@ -1,16 +1,14 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.CoreModule.Core.Conditions;
 using VirtoCommerce.MarketplaceQuoteModule.Core;
-using VirtoCommerce.MarketplaceQuoteModule.Core.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Conditions;
-using VirtoCommerce.MarketplaceQuoteModule.Core.Models.Search;
 using VirtoCommerce.MarketplaceQuoteModule.Core.Services;
 using VirtoCommerce.MarketplaceQuoteModule.Data;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Handlers;
-using VirtoCommerce.MarketplaceQuoteModule.Data.Models;
 using VirtoCommerce.MarketplaceQuoteModule.Data.MySql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.PostgreSql;
 using VirtoCommerce.MarketplaceQuoteModule.Data.Repositories;
@@ -25,10 +23,7 @@ using VirtoCommerce.Platform.Data.MySql.Extensions;
 using VirtoCommerce.Platform.Data.PostgreSql.Extensions;
 using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.QuoteModule.Core.Events;
-using VirtoCommerce.QuoteModule.Core.Models;
 using VirtoCommerce.QuoteModule.Core.Services;
-using VirtoCommerce.QuoteModule.Data.Model;
-using VirtoCommerce.QuoteModule.Data.Repositories;
 using VirtoCommerce.StateMachineModule.Core.Events;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Web;
@@ -40,7 +35,7 @@ public class Module : IModule, IHasConfiguration
 
     public void Initialize(IServiceCollection serviceCollection)
     {
-        serviceCollection.AddDbContext<VcmpQuoteDbContext>(options =>
+        serviceCollection.AddDbContext<SellerQuoteDbContext>(options =>
         {
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
             var connectionString = Configuration.GetConnectionString(ModuleInfo.Id) ?? Configuration.GetConnectionString("VirtoCommerce");
@@ -59,14 +54,21 @@ public class Module : IModule, IHasConfiguration
             }
         });
 
-        serviceCollection.AddTransient<IQuoteRepository, VcmpQuoteRepository>();
+        serviceCollection.AddTransient<ISellerQuoteRepository, SellerQuoteRepository>();
+        serviceCollection.AddTransient<Func<ISellerQuoteRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetRequiredService<ISellerQuoteRepository>());
 
-        serviceCollection.AddTransient<IQuoteRequestService, VcmpQuoteRequestService>();
+        serviceCollection.AddTransient<ISellerQuoteRequestService, SellerQuoteRequestService>();
+        serviceCollection.AddTransient<ISellerQuoteRequestCrudService, SellerQuoteRequestCrudService>();
+        serviceCollection.AddTransient<ISellerQuoteRequestSearchService, SellerQuoteRequestSearchService>();
         serviceCollection.AddTransient<IQuoteRequestSplitter, QuoteRequestSplitter>();
+
+        // TEMPORARY: adds ObjectIds filter to the quote request search. Remove once the Quote module supports it.
+        serviceCollection.AddTransient<IQuoteRequestService, SellerQuoteRequestPlatformService>();
 
         serviceCollection.AddTransient<CreateQuoteRequestEventHandler>();
         serviceCollection.AddTransient<SubmitQuoteRequestEventHandler>();
         serviceCollection.AddTransient<ChangeStatusQuoteRequestEventHandler>();
+        serviceCollection.AddTransient<DeleteQuoteRequestEventHandler>();
         serviceCollection.AddTransient<StateMachineTriggerEventHandler>();
 
         serviceCollection.AddMediatR(configuration => configuration.RegisterServicesFromAssemblyContaining<Anchor>());
@@ -81,14 +83,10 @@ public class Module : IModule, IHasConfiguration
         var settingsRegistrar = serviceProvider.GetRequiredService<ISettingsRegistrar>();
         settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
 
-        AbstractTypeFactory<QuoteRequest>.OverrideType<QuoteRequest, VcmpQuoteRequest>();
-        AbstractTypeFactory<QuoteRequestEntity>.OverrideType<QuoteRequestEntity, VcmpQuoteRequestEntity>();
-
-        AbstractTypeFactory<QuoteRequestSearchCriteria>.OverrideType<QuoteRequestSearchCriteria, VcmpQuoteRequestSearchCriteria>();
-
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, CreateQuoteRequestEventHandler>();
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, SubmitQuoteRequestEventHandler>();
         appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, ChangeStatusQuoteRequestEventHandler>();
+        appBuilder.RegisterEventHandler<QuoteRequestChangeEvent, DeleteQuoteRequestEventHandler>();
         appBuilder.RegisterEventHandler<StateMachineTriggerEvent, StateMachineTriggerEventHandler>();
 
         // Register condition trees expressions into the AbstractFactory<IConditionTree>
@@ -102,7 +100,7 @@ public class Module : IModule, IHasConfiguration
 
         // Apply migrations
         using var serviceScope = serviceProvider.CreateScope();
-        using var dbContext = serviceScope.ServiceProvider.GetRequiredService<VcmpQuoteDbContext>();
+        using var dbContext = serviceScope.ServiceProvider.GetRequiredService<SellerQuoteDbContext>();
         dbContext.Database.Migrate();
     }
 

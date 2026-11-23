@@ -11,7 +11,7 @@ using VirtoCommerce.MarketplaceQuoteModule.Data.Repositories;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Data.MySql.Migrations
 {
-    [DbContext(typeof(VcmpQuoteDbContext))]
+    [DbContext(typeof(SellerQuoteDbContext))]
     [Migration("20250922105134_AddDefaultStateMachine")]
     partial class AddDefaultStateMachine
     {

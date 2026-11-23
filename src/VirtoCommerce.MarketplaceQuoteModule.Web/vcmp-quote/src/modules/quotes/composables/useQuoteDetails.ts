@@ -91,7 +91,11 @@ export function useQuoteDetails(): IUseQuoteDetails {
 
   const { action: loadQuote, loading: loadingQuote } = useAsync<string>(async (id) => {
     const apiClient = await getApiClient();
-    const result = await apiClient.getById(id);
+    const response = await apiClient.getById(id);
+    const result = response?.quoteRequest;
+    if (!result) {
+      return;
+    }
 
     result.items?.forEach((quoteItem: QuoteItemWithTotal) => {
       quoteItem.total =
