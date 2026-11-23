@@ -1,0 +1,24 @@
+{
+  "MARKETPLACE_QUOTE": {
+    "SELLER_QUOTES": {
+      "TITLE": "Quotes",
+      "EMPTY": "No quotes yet",
+      "DELETE_CONFIRM": "Are you sure you want to delete the selected quote requests?",
+      "DETAILS_UNAVAILABLE": "Quote details are not available: the Quote module's Admin Shell plugin is not installed.",
+      "COLUMNS": {
+        "NUMBER": "Quote #",
+        "STATUS": "Status",
+        "ITEMS": "Item count",
+        "CUSTOMER": "Customer",
+        "CREATED": "Created"
+      }
+    },
+    "TOOLBAR": {
+      "REFRESH": "Refresh",
+      "DELETE": "Delete"
+    },
+    "WIDGETS": {
+      "SELLER_QUOTES": "Quote requests"
+    }
+  }
+}

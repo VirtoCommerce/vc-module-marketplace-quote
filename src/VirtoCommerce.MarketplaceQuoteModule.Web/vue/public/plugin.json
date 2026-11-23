@@ -1,0 +1,4 @@
+{
+  "remote": { "name": "marketplace_quote_admin", "exposed": "./Module" },
+  "contributions": {}
+}
