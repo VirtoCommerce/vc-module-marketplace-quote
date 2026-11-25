@@ -25,6 +25,7 @@ using VirtoCommerce.Platform.Data.SqlServer.Extensions;
 using VirtoCommerce.QuoteModule.Core.Events;
 using VirtoCommerce.QuoteModule.Core.Services;
 using VirtoCommerce.StateMachineModule.Core.Events;
+using VirtoCommerce.StateMachineModule.Core.Services;
 
 namespace VirtoCommerce.MarketplaceQuoteModule.Web;
 
@@ -94,6 +95,8 @@ public class Module : IModule, IHasConfiguration
         {
             AbstractTypeFactory<IConditionTree>.RegisterType(conditionTree.GetType());
         }
+
+        StateMachineEntityTypes.Register(serviceProvider.GetRequiredService<IStateMachineEntityTypeRegistrar>());
 
         //Register module authorization
         appBuilder.UseModuleAuthorization();
